@@ -1,0 +1,166 @@
+swagger: '2.0'
+info:
+  title: payment-execution
+  version: 1.0.0
+  description: Esta API permite exponer el proceso relacionados el cálculo y aplicación de tarifas y comisiones en servicios financieros.
+basePath: /payment-execution/v1.0
+paths:
+  /calculate-service-fees/internal-transfer/execute:
+    post:
+      tags:
+      - calculate-service-fees-internal-transfers
+      operationId: postCalculateServiceFeesInternalTransfer
+      description: Realizar el proceso relacionados el cálculo y aplicación de tarifas y comisiones
+      summary: Realizar el proceso relacionados el cálculo y aplicación de tarifas y comisiones
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_ExecuteCalculateServiceFeesInternalTransfers
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_ExecuteCalculateServiceFeesInternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout          
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      status_code:
+        type: string
+        description: Código de error
+      status:
+        type: string
+        description: Estado
+      message:
+        type: string
+        description: Mensaje de error
+  REQUEST_ExecuteCalculateServiceFeesInternalTransfers:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+      - ExecuteCalculateServiceFeesInternalTransfers
+    type: object
+    properties:
+      ExecuteCalculateServiceFeesInternalTransfers:
+        type: object
+        description: Objeto que contiene los datos de respuesta del cálculo de comisiones y tarifas para las transferencias entre cuentas internas.
+        properties:
+          AccountService:
+            description: Objeto que contiene la información de las comisiones
+            properties:
+              Account:
+                type: object
+                description: Código de la cuenta
+                properties:
+                  Identification: 
+                      type: integer
+                      description: codigo de la cuenta.
+                      example: 901234567890
+          Product:
+            description: Objeto que contiene la información de las comisiones
+            properties:
+              ProductIdentification:
+                type: object
+                description: Código del producto de la operación
+                properties:
+                  Identifier:
+                    type: integer
+                    description: Código del producto de la operación
+                    example: 1234
+          Transaction:
+            description: Objeto que contiene la información de las comisiones
+            properties:
+              Amount:
+                type: object
+                description: Código del producto de la operación
+                properties:
+                  AmountValue:
+                    type: number
+                    description: Monto asignado a la respuesta 
+                    example: 125.2
+              TransactionReason:
+                type: integer
+                description: Concepto de la operación
+          Location:
+            description: Datos de locación de servicio 
+            properties:
+              LocationCode:
+                type: integer
+                description: Código de la agencia de la entidad
+                example: 1
+  RESPONSE_ExecuteCalculateServiceFeesInternalTransfersResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - ExecuteCalculateServiceFeesInternalTransfersResponse
+    type: object
+    properties:
+      ExecuteCalculateServiceFeesInternalTransfersResponse:
+        type: object
+        description: Objeto que contiene el cálculo de comisiones
+        properties:
+          Code:
+            type: integer
+            description: Código de respuesta operacion
+            example: 100
+          Commission:
+            description: Información de las comisiones
+            properties:
+              CommissionConcept:
+                type: object
+                description: Servicio por el que se pide o paga la comisión.
+                properties:
+                  Code:
+                    type: integer
+                    description: Código de concepto de la comisión
+                    example: 123
+              Amount:
+                type: object
+                description: Objeto para manejo de los monto de la comisión.
+                properties:
+                  AmountValue:
+                    type: number
+                    description: Monto asignado a la respuesta 
+                    example: 125.2
+                

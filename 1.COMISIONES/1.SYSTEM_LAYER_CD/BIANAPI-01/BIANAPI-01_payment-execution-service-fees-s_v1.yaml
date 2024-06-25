@@ -1,0 +1,172 @@
+swagger: '2.0'
+info:
+  title: payment-execution-service-fees-s
+  version: 1.0.0
+  description: Esta API permite procesar las operaciones y procesos relacionados con la determinación, cálculo y aplicación de tarifas y comisiones en servicios financieros.
+basePath: /payment-execution-service-fees-s/v1
+paths:
+  /internal-transfers/execute:
+    post:
+      tags:
+      - internal-transfers
+      description: Calcular comisión de transferencias internas para cuenta digital
+      summary: Calcular comisión de transferencias internas para cuenta digital
+      operationId: postInternalTransfers
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_ExecuteInternalTransfers
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_ExecuteInternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  REQUEST_ExecuteInternalTransfers:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+      - ExecuteInternalTransfers
+    type: object
+    properties:
+      ExecuteInternalTransfers:
+        type: object
+        description: Objeto que almacena el mensaje se solictud
+        properties:
+          Account:
+            type: object
+            description: Objeto que administra la información de las cuentas
+            properties:
+              Identification: 
+                  type: integer
+                  description: Código de la cuenta
+                  example: 901234567890
+          Product:
+            description: Objeto que almacena la entidad producto
+            properties:
+              ProductIdentification:
+                type: object
+                description: Objeto que almacena la identificación producto
+                properties:
+                  Identifier:
+                    type: integer
+                    description: Código del producto de la operación
+                    example: 1234
+          Transaction:
+            description: Objeto que contiene la información de la transacción
+            properties:
+              TransactionReason:
+                type: integer
+                description: Concepto de la operación
+              Amount:
+                type: object
+                description: Objeto que almacena el detalle de los montos
+                properties:
+                  Value:
+                    type: number
+                    description: Valor de la operación interbancaria
+                    example: 125.2
+          Location:
+            description: Objeto que contiene los datos de locación 
+            properties:
+              LocationCode:
+                type: integer
+                description: Código de la agencia de la entidad
+                example: 1
+          Channel:
+            description: Objeto que contiene los datos de locación 
+            properties:
+              ChannelReference:
+                type: integer
+                description: Codigo del canal de operacion (CoreBank, App, etc)
+                example: 1
+  RESPONSE_ExecuteInternalTransfersResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - ExecuteInternalTransfersResponse
+    type: object
+    properties:
+      ExecuteInternalTransfersResponse:
+        type: object
+        description: Objeto que almacena el mensaje de respuesta
+        properties:
+          Code:
+            type: integer
+            description: Código de respuesta operacion
+            example: 100
+          Commission:
+            description: Información de las comisiones
+            properties:
+              Code:
+                type: integer
+                description: Código de concepto de la comisión
+                example: 123
+              AdditionalInformation:
+                type: string
+                description: Nombre de la comisión
+                example: Comisión por transferencia cuenta interna
+              Amount:
+                type: object
+                description: Objeto que almacena el detalle de los montos
+                properties:
+                  Value:
+                    type: number
+                    description: Monto asignado a la respuesta 
+                    example: 125.2
+                  

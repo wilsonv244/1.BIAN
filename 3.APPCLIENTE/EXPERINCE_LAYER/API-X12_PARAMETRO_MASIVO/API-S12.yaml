@@ -1,0 +1,177 @@
+swagger: "2.0"
+info:
+  title: party-reference-data-directory-b
+  version: 1.0.0
+  description: Esta API permite obtener catálogo de campos que abarca diferentes tipos de datos.
+basePath: /party-reference-data-directory-b/v1
+paths:
+  /field-management/retrieve:
+    get:
+      tags:
+        - BQ - FieldManagement
+      operationId: getFieldManagement
+      description: Obtener catálogo de campos que abarca diferentes tipos de datos.
+      summary: Obtener catálogo de campos que abarca diferentes tipos de datos.
+      produces:
+        - application/json
+        
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_RetrieveFieldManagementResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+definitions:
+
+  RESPONSE_RetrieveFieldManagementResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - RetrieveFieldManagementResponse
+    type: object
+    properties:
+      RetrieveFieldManagementResponse:
+        description: Objeto que almacena el mensaje de respuesta.
+        type: object
+        properties:
+          PersonIdentification:
+            description: Objeto que almacena información relacionada con la identificación del cliente.
+            type: array
+            items:
+              type: object
+              properties:
+                TypeOfIdentification:
+                  description: Determina el ID del tipo de documento.
+                  type: integer
+                  example: 1
+                IdentificationShortName:
+                  description: Nombre corto del tipo de identificación, como "DNI".
+                  type: string
+                  example: "DNI"
+                IdentificationType:
+                  description: El tipo de identificación, como "Documento Nacional de Identidad".
+                  type: string
+                  example: "Documento Nacional de Identidad"
+                ValidationRules:
+                  description: Reglas de validación para el documento de identificación.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Pattern:
+                        description: Patrón de validación del documento, por ejemplo, una expresión regular.
+                        type: string
+                        example: "^[0-9]{8}$"
+                      Description:
+                        description: Descripción de las reglas de validación.
+                        type: string
+                        example: "El DNI debe tener 8 dígitos numéricos."
+          Agreements:
+            description: Objeto que almacena un acuerdo común, formal o informal, entre dos o más partes.
+            type: array
+            items:
+              type: object
+              properties:
+                AgreementIdentification:
+                  description: El identificador del acuerdo, como el Número de Acuerdo, Número de Contrato, Número de Registro de Contrato, etc.
+                  type: integer
+                  example: 1
+                AgreementSubjectMatter:
+                  description: El asunto del acuerdo, como "Términos y condiciones".
+                  type: string
+                  example: "Términos y condiciones"
+                AgreementDescription:
+                  description: Una descripción del acuerdo, como un texto plano de términos y condiciones.
+                  type: string
+                  example: "Texto plano de términos y condiciones ..."
+                AgreementURLAddress:
+                  description: La URL donde se puede encontrar el acuerdo.
+                  type: string
+                  example: "https://ejemplo.com/terminos"
+          ContactPoints:
+            description: Objeto que almacena información de contacto relacionada al cliente.
+            type: array
+            items:
+              type: object
+              properties:
+                ContactIdentification:
+                  description: Identificador único para el contacto.
+                  type: integer
+                  example: 1
+                ContactType:
+                  description: Tipo de contacto, como "WhatsApp", "Teléfono", "Email", etc.
+                  type: string
+                  example: "WhatsApp"
+                ContactValue:
+                  description: Valor del contacto, como el número de teléfono o dirección de correo electrónico.
+                  type: string
+                  example: "+511234567890"
+          Branches:
+            description: Objeto que almacena información sobre la ubicación de las sucursales.
+            type: array
+            items:
+              type: object
+              properties:
+                BranchIdentification:
+                  description: Identificador único de la sucursal.
+                  type: integer
+                  example: 1
+                BranchName:
+                  description: Nombre de la sucursal.
+                  type: string
+                  example: "Oficina Central"
+                BranchAddress:
+                  description: Dirección de la sucursal.
+                  type: string
+                  example: "Av. Siempre Viva 123, Surquillo"
+                LatitudeAddress:
+                  description: Latitud de la ubicación de la sucursal.
+                  type: string
+                  example: -12.113869
+                LongitudeAddress:
+                  description: Longitud de la ubicación de la sucursal.
+                  type: string
+                  example: -77.019205
+
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error

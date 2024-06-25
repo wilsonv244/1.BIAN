@@ -1,0 +1,181 @@
+swagger: '2.0'
+info:
+  title: party-authentication-s 
+  version: 1.0.0
+  description: Esta API permite registrar la cuenta de usuario en aws cognito.
+basePath: /party-authentication-s /v1
+paths:
+  /customer-verification/register:
+    post:
+      tags:
+      - BQ - CustomerVerification
+      description: Registrar cuenta de usuario en aws cognito.
+      summary: Registrar cuenta de usuario en aws cognito.
+      operationId: postCustomerVerification
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_RegisterCustomerVerification
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RegisterCustomerVerificationResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+
+  REQUEST_RegisterCustomerVerification:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+      - RegisterCustomerVerification 
+    type: object
+    properties:
+      RegisterCustomerVerification:
+        type: object
+        description: Objeto que contiene los datos de solicitud para la configuración
+        properties:
+          Account:
+            type: object
+            description: Objeto que contiene el id cuenta
+            properties:
+              AccountIdentification:
+                type: integer
+                description: id cuenta
+                example: 6666
+          PersonIdentification:
+                type: object
+                description: Objeto que contiene datos de identificacion
+                properties:
+                  CustomerIdentificationNumber:
+                    type: integer
+                    description: id  cliente
+                    example: 2000
+                  TypeOfIdentification:
+                    type: integer
+                    description: tipo de documento
+                    example: 1
+                  IdentityCardNumber:
+                    type: integer
+                    description: numero de DNI
+                    example: 476646548
+          Contact:
+                type: object
+                description: Objeto que contiene la identificacion del contacto
+                properties:
+                  Name:
+                    type: string
+                    description: nombre 
+                    example: jorgito
+                  EmailAddress:
+                    type: string
+                    description: email
+                    example: test@gmail.com
+                  PhoneNumber:
+                    type: integer
+                    description: numero de celular
+                    example: 9521454475
+          AuthenticationMethod:
+                type: object
+                description: Objeto que contiene metodo de autenticacion
+                properties:
+                  Password:
+                    type: string
+                    description: tipo de dato contrasena
+                    example: test@123s-
+          DeviceIdentification:
+                type: object
+                description: Objeto que contiene la información del dispositivo
+                properties:
+                  IMEI:
+                    type: integer
+                    description: La identidad internacional de equipo móvil único para identificar un teléfono móvil.
+                    example: 123123423532342
+                  MAC:
+                    type: string
+                    description: Dirección MAC del dispositivo
+                    example: 00:1B:44:11:3A:B7
+          Device:
+                type: object
+                description: Objeto que contiene la información de la version de la aplicacion
+                properties:
+                  ApplicationVersion:
+                    type: string
+                    description: version de la aplicacion
+                    example: v1.9
+                  
+  RESPONSE_RegisterCustomerVerificationResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - RegisterCustomerVerificationResponse
+    type: object
+    properties:
+      RegisterCustomerVerificationResponse:
+        type: object
+        description: Objeto que contiene los datos de solicitud para el registro de cuenta.
+        properties:
+          AuthenticationMethod:
+            type: object
+            description: Objeto que contiene la información relacionada al registro de cuenta
+            properties:
+              CognitoAuthIdentifier :
+                type: string
+                description: Un identificador que permite hacer referencia de forma única a una instancia de una transacción.
+                example: 1123123-asd123-asd123
+
+            

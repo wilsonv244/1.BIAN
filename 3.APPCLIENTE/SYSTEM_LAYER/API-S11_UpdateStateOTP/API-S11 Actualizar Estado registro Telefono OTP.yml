@@ -1,0 +1,99 @@
+swagger: '2.0'
+info:
+  title: party-authentication-s
+  version: 1.0.0
+  description: Esta API permite verificar un dispositivo mobil para hacer uso del servicio AWS SNS.
+basePath: /party-authentication-s/v1
+paths:
+  /authentication-devices/{transaction-identification}/update:
+    patch:
+      tags:
+      - authentication-devices
+      description: Actualizar dispositivo mobil de pendiente a verificado
+      summary: Actualizar dispositivo mobil de pendiente a verificado
+      operationId: patchAuthenticationDevices
+      produces:
+        - application/json
+      parameters:
+        - name: transaction-identification
+          in: path
+          description: identificador  única que hace referencia a una instancia de una transacción
+          required: true
+          type: integer
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_UpdateAuthenticationDevicesResponse
+          description: OK
+
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Verification Invalid
+        '403':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Authorization Error
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Resource Not Found
+        '429':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Throttled
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Error
+
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  REQUEST_UpdateAuthenticationDevices:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+      - UpdateAuthenticationDevices
+    type: object
+    properties:
+      UpdateAuthenticationDevices:
+        type: object
+        description: Objeto que contiene los datos de solicitud para la configuración.
+        properties:
+          Commissions:
+            type: object
+            description: Objeto que contiene la información relacionada a verificacion
+           
+            
+  RESPONSE_UpdateAuthenticationDevicesResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - UpdateAuthenticationDevicesResponse
+    type: object
+    properties:
+      UpdateAuthenticationDevicesResponse:
+        type: object
+        description: Objeto que contiene los datos de respuesta de la configuración
+        properties:
+          TransactionIdentification:
+                        type: integer
+                        example: "666555"
+          

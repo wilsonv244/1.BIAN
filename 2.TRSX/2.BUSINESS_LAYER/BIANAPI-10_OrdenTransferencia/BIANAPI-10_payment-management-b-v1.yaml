@@ -1,0 +1,278 @@
+swagger: '2.0'
+info:
+  title: payment-management-b
+  version: 1.0.0
+  description: API que expone la generación de orden de transferencia interbancaria
+basePath: /payment-management-b/v1
+paths:
+  /external-transfers/create:
+    post:
+      tags:
+      - BQ - ExternalTransfers
+      operationId: postExternalTransfers
+      description: Expone la generación de orden de transferencia interbancaria
+      summary: Expone la generación de orden de transferencia interbancaria
+      produces:
+        - application/json
+      parameters:
+        - name: channelIdentification
+          in: header
+          description: Indicador del canal
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Indicador del mensaje
+          required: true
+          type: string
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_CreateExternalTransfers
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_CreateExternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error  
+  REQUEST_CreateExternalTransfers:
+    description: ''
+    required:
+      - CreateExternalTransfers
+    type: object
+    properties:
+      CreateExternalTransfers:
+        description: 'Objeto que representa al request del mesnsaje'
+        type: object
+        properties:
+          Channel:
+            type: object
+            description: 'Objeto que representa la información del canal'
+            properties:
+              ChannelReference:
+                type: integer
+                description: 'Identificación del canal'
+                example: '11'
+          Location:
+            type: object
+            description: 'Objeto que representa la información de la locación'
+            properties:
+              LocationCode:
+                type: integer
+                description: 'Código de agencia'
+                example: '11'
+          Transaction:
+            type: object
+            description: 'Objeto que representa a la información de la transacción'
+            properties:
+              TransactionDate:
+                type: string
+                description: 'TransactionDate'
+                example: '16-01-2024'
+              UserId:
+                type: integer
+                description: 'Código del usuario'
+                example: '123456789'
+              MessageIdentification:
+                type: integer
+                description: 'Número aleatorio perteneciente a la consulta'
+                example: '123456789'
+              TransactionReason:
+                type: integer
+                description: 'Código de motivo de operación por tipo de operación'
+                example: '1234'
+          Document:
+            type: object
+            description: 'Objeto que representa al documento de la operación'
+            properties:
+              Type:
+                type: string
+                description: 'Tipo de documento'
+                example: 'DNI'
+              Identification:
+                type: string
+                description: 'Número del documento'
+                example: '47586925'
+          Amount:
+            type: object
+            description: 'Objeto que representa a los montos de la operación'
+            properties:
+              Value:
+                type: number
+                description: 'Monto base de la operación'
+                example: '12.52'
+              CurrencyCode:
+                type: integer
+                description: 'Código moneda'
+                example: '1'
+              TotalValue:
+                type: number
+                description: 'Monto final considerando todos los conceptos'
+                example: '15.25'
+          Product:
+            type: object
+            description: 'Objeto que representa al producto'
+            properties:
+              ProductIdentification:
+                type: object
+                description: 'Objeto que representa a la identificación del producto'
+                properties:
+                  Identifier:
+                    type: string
+                    description: Código de producto
+          Payment:
+            type: object
+            description: 'Objeto que representa a los montos de la operación'
+            properties:
+              Type:
+                type: integer
+                description: 'Código de la lista de los Tipos de Pago '
+                example: '12'
+          Commissions:
+            type: array
+            description: 'Información de las comisiones'
+            items:
+              type: object
+              properties:
+                Commission:
+                  type: object
+                  description: 'Objeto que identifica la información de la comisión'
+                  properties:
+                    AdditionalInformation:
+                      type: integer
+                      description: 'Nombre del concepto de la comisión'
+                      example: 1234
+                    Code:
+                      type: integer
+                      description: 'Código del concepto de la comisión'
+                      example: 1234
+                    Amount:
+                      type: object
+                      description: 'Objeto que representa la información del monto de la comisión'
+                      properties:
+                        Value:
+                          type: number
+                          description: 'Monto de la comisión'
+          Creditor:
+            type: object
+            description: 'Objeto que representa al creditor quien recibe el dinero'
+            properties:
+              Account:
+                type: object
+                description: 'Objeto que almacena información relacionada a las partes de una transacción financiera'
+                properties:
+                  Identification:
+                    type: string
+                    description: 'Número de cuenta receptor'
+                    example: '00012345678'
+              PhoneAddress:
+                type: object
+                description: 'Objeto que representa al teléfono'
+                properties:
+                  PhoneNumber:
+                    type: string
+                    description: 'Número de télefono del receptor'
+                    example: '00012345678'
+          Debtor:
+            type: object
+            description: 'Objeto que representa al debtor quien envia el dinero'
+            properties:
+              Account:
+                type: object
+                description: 'Objeto que almacena información relacionada a las partes de una transacción financiera'
+                properties:
+                  Identification:
+                    type: string
+                    description: 'Número de cuenta receptor'
+                    example: '00012345678'
+  RESPONSE_CreateExternalTransfersResponse:
+    description: ''
+    required:
+      - CreateExternalTransfersResponse
+    type: object
+    properties:
+      CreateExternalTransfersResponse:
+        description: 'Objeto que representa al cuerpo de mensaje'
+        properties:
+          Channel:
+            type: object
+            description: 'Objeto que representa la información del canal'
+            properties:
+              ChannelReference:
+                type: integer
+                description: 'Identificación del canal'
+                example: '11'
+          Creditor:
+            type: object
+            description: 'Objeto que representa al creditor quien recibe el dinero'
+            properties:
+              PartyIdentification:
+                type: object
+                description: 'Objeto que almacena información relacionada al creditor'
+                properties:
+                  IdentificationNumber:
+                    type: integer
+                    description: 'Número de cuenta receptor'
+                    example: 45587745
+              Account:
+                type: object
+                description: 'Objeto que almacena información relacionada a las partes de una transacción financiera'
+                properties:
+                  Identification:
+                    type: string
+                    description: 'Número de cuenta receptor'
+                    example: '00012345678'

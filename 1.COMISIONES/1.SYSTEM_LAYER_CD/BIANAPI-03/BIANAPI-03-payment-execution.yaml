@@ -1,0 +1,187 @@
+swagger: '2.0'
+info:
+  title: payment-execution
+  version: 1.0.0
+  description: Esta API permite procesar las operaciones y procesos relacionados con la determinación, cálculo y aplicación de tarifas y comisiones en servicios financieros.
+basePath: /payment-execution/v1.0
+paths:
+  /service-fees/internal-transfers/retrieve:
+    get:
+      tags:
+      - service-fees-internal-transfers
+      operationId: getServiceFeesInternalTransfers
+      description: Listar Comisiones - Transferencias internas para cuenta digital
+      summary: Listar Comisiones - Transferencias internas para cuenta digital
+      produces:
+        - application/json
+      parameters:
+        - name: AdditionalProductCode
+          in: query
+          description: Código del producto de la operación
+          required: true
+          type: integer
+        - name: ProductChannelReference
+          in: query
+          description: Código del canal de apertura Ventanilla ó Aplicativo
+          required: true
+          type: integer
+        - name: TransactionChannelReference
+          in: query
+          description: Código del canal de operación Ventanilla ó Aplicativo
+          required: true
+          type: integer
+        - name: ConceptComissionType
+          in: query
+          description: Identificador del tipo de concepto de comisión Mantenimiento ó Interplaza ó Plaza
+          required: true
+          type: integer
+        - name: InterplazaIndicator
+          in: query
+          description: Indicardor Interplaza / plaza
+          required: true
+          type: boolean
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RetrieveServiceFeesInternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout          
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  RESPONSE_RetrieveServiceFeesInternalTransfersResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - RetrieveServiceFeesInternalTransfersResponse
+    type: object
+    properties:
+      RetrieveServiceFeesInternalTransfersResponse:
+        type: object
+        description: Objeto que contiene la lista de comisiones para trasnferencia de cuenta digital
+        properties:
+          Commissions:
+            type: array
+            description: Información de las comisiones
+            items:
+              type: object
+              properties:
+                Commission:
+                  type: object
+                  properties:
+                    Type:
+                      type: object
+                      properties:
+                        Code:
+                          type: integer
+                          description: Código de la comisión
+                          example: 1234
+                    Transaction:
+                      type: array
+                      description: Información de las comisiones
+                      items:
+                        type: object
+                        properties:
+                          Type:
+                            type: object
+                            properties:
+                              Code:
+                                type: integer
+                                description: Código de concepto de operación
+                                example: 567
+                              AdditionalInformation:
+                                type: integer
+                                description: Descripción del concepto de la operación
+                                example: Operación de transferencia
+                    ActiveCommissionIndicator:
+                      type: boolean
+                      description: Indicador de Vigencia de la comisión
+                      example: true
+                    DailyFreeOperationCount:
+                      type: integer
+                      description: Cantidad de operaciones libres por día
+                      example: 5
+                    InterplazaTransactionIndicator:
+                      type: integer
+                      description: Indicador para determinar si es Interplaza ó plaza
+                      example: false
+                    VariableRateIndicator:
+                      type: integer
+                      description: Indicador para determinar si es tasa Variable ó Fijo
+                      example: false
+                    Amount:
+                      type: object
+                      properties:
+                        AmountValue:
+                          type: number
+                          description: Monto comisión
+                          example: 7.25
+                        MinimumAmountValue:
+                          type: number
+                          description: Monto mínimo
+                          example: 3.25
+                        MaximumAmount:
+                          type: number
+                          description: Monto máximo
+                          example: 17.25
+                    VariableAmount:
+                      type: object
+                      properties:
+                        MinimumAmountValue:
+                          type: number
+                          description: Monto mínimo variable
+                          example: 1.25
+                        MaximumAmountValue:
+                          type: number
+                          description: Monto máximo variable
+                          example: 7.25
+                
+                

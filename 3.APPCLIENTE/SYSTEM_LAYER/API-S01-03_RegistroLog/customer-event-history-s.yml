@@ -1,0 +1,295 @@
+openapi: 3.0.1
+info:
+  title: CustomerEventHistory
+  description: API para manejar el historial de eventos del cliente
+  version: 1.0.0
+servers:
+  - url: /customer-event-history-s/v1
+paths:
+  /servicing/initiate:
+    post:
+      summary: Iniciar registro de evento del cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                CustomerServicingEventType:
+                  type: string
+                  example: "API Interation"
+                  description: "Tipo de evento"
+                AccountIdentification:
+                  type: string
+                  example: "56789"
+                  description: "idCuenta de APP del cliente"
+                AccessedProductandService:
+                  type: string
+                  example: "/RegistrarCuentaUsuario"
+                  description: "Operacion de API al que se accede"
+                MessageIdentification:
+                  type: string
+                  example: "09876543-21ab-43de-85cd-9876543210ab"
+                  description: "Traza de la operación de API asociada a AccessedProductandService"
+                RequestDetails:
+                  type: object
+                  properties:
+                    PayloadDetails:
+                      type: object
+                      description: "body o params que recibe la API"
+      responses:
+        '200':
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  InitiateServicingResponse:
+                    type: object
+                    properties:
+                      CustomerServicingEventId:
+                        type: string
+                        example: "512345"
+                        description: "id único del registro"
+        '400':
+          description: Solicitud incorrecta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status_code:
+                          type: string
+                          description: Código de error
+                        message:
+                          type: string
+                          description: Mensaje de error
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status_code:
+                          type: string
+                          description: Código de error
+                        message:
+                          type: string
+                          description: Mensaje de error
+
+  /servicing/{servicingEventId}/execute:
+    patch:
+      summary: Completar registro de evento del cliente
+      parameters:
+        - name: servicingEventId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ResponseDetails:
+                  type: object
+                  properties:
+                    CreationDateTime:
+                      type: string
+                      format: date-time
+                      example: "2024-05-25T10:15:45Z"
+                      description: "Fecha y hora de creación"
+                    PayloadDetails:
+                      type: object
+                      description: "body o params"
+                    StatusCode:
+                      type: integer
+                      example: 200
+                    ErrorCode:
+                      type: string
+                      example: "string"
+                      description: "código del error"
+                    ErrorMessage:
+                      type: string
+                      example: "string"
+                      description: "mensaje del error"
+                Successful:
+                  type: boolean
+                  example: true
+                  description: "flag para determinar si tra transaccion fue exitosa"
+      responses:
+        '200':
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ExecuteServicingResponse:
+                    type: object
+                    properties:
+                      CustomerServicingEventId:
+                        type: string
+                        example: "cust12345"
+        '400':
+          description: Solicitud incorrecta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status_code:
+                          type: string
+                          description: Código de error
+                        message:
+                          type: string
+                          description: Mensaje de error
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status_code:
+                          type: string
+                          description: Código de error
+                        message:
+                          type: string
+                          description: Mensaje de error
+
+  /servicing/last/account-id/{accountId}/accessed-productand-service/{accessedProductandService}/retrieve:
+    get:
+      summary: Recuperar eventos del cliente
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: accessedProductandService
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  RetrieveServicingResponse:
+                    type: object
+                    properties:
+                      CustomerServicingEventId:
+                        type: string
+                        example: "42345"
+                      CustomerServicingEventType:
+                        type: string
+                        example: "API Interaction"
+                      CreationDateTime:
+                        type: string
+                        format: date-time
+                        example: "2024-05-25T10:15:30Z"
+                      AccountIdentification:
+                        type: string
+                        example: "c56789"
+                      AccessedProductandService:
+                        type: string
+                        example: "/RegistrarCuentaUsuario"
+                      MessageIdentification:
+                        type: string
+                        example: "09876543-21ab-43de-85cd-9876543210ab"
+                      RequestDetails:
+                        type: object
+                        properties:
+                          CreationDateTime:
+                            type: string
+                            format: date-time
+                            example: "2024-05-25T10:15:30Z"
+                          PayloadDetails:
+                            type: object
+                      ResponseDetails:
+                        type: object
+                        properties:
+                          CreationDateTime:
+                            type: string
+                            format: date-time
+                            example: "2024-05-25T10:15:45Z"
+                          PayloadDetails:
+                            type: object
+                          StatusCode:
+                            type: integer
+                            example: 200
+                          ErrorCode:
+                            type: string
+                            example: ""
+                          ErrorMessage:
+                            type: string
+                            example: ""
+                      Successful:
+                        type: boolean
+                        example: true
+        '400':
+          description: Solicitud incorrecta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status_code:
+                          type: string
+                          description: Código de error
+                        message:
+                          type: string
+                          description: Mensaje de error
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status_code:
+                          type: string
+                          description: Código de error
+                        message:
+                          type: string
+                          description: Mensaje de error

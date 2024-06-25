@@ -1,0 +1,146 @@
+swagger: "2.0"
+info:
+  title: /party-reference-data-directory-s
+  version: 1.0.0
+  description: Esta API permite registrar los datos básicos del cliente, incluyendo nombre, dirección e información de contacto.
+basePath: /party-reference-data-directory-s/v1
+paths:
+  /customer-basic-data/register:
+    post:
+      tags:
+        - BQ - CustomerBasicData
+      operationId: postCustomerBasicData
+      description: Maneja la gestión de datos básicos para perfiles de clientes, incluyendo nombre, dirección e información de contacto.
+      summary: Maneja la gestión de datos básicos para perfiles de clientes, incluyendo nombre, dirección e información de contacto.
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_RegisterCustomerBasicData
+          in: body
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_RegisterCustomerBasicDataResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+definitions:
+  OBJECT_CustomerBasicData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada.
+    type: object
+    properties:
+      PersonIdentification:
+        description: Objeto que almacena información relacionada al cliente.
+        type: object
+        properties:
+          CustomerIdentificationNumber:
+            description: Número único asignado por el banco para identificar al cliente.
+            type: integer
+      Person:
+        description: Objeto que almacena información adicional relacionada al cliente.
+        type: object
+        properties:
+          Gender:
+            description: Especifica el género de la persona.  
+            type: integer
+            example: 1
+          BirthDate:
+            description: Fecha en la que nace una persona.
+            type: string
+      PersonName:
+        description: Objeto que almacena información relacionada al cliente.
+        type: object
+        properties:
+          LastName:
+            description: Determina el apellido paterno de la persona.
+            type: string
+          MothersLastName:
+            description: Determina el apellido materno de la persona.
+            type: string
+          GivenName:
+            description: Determina el primer nombre o nombres dados de la persona.
+            type: string
+      Contact:
+        description: Objeto que almacena información de contacto relacionada al cliente.
+        type: object
+        properties:
+          EmailAddress:
+            description: Dirección de correo electrónico.
+            type: string
+          PhoneNumber:
+            description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
+            type: string
+  REQUEST_RegisterCustomerBasicData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    type: object
+    properties:
+      RegisterCustomerBasicData:
+        $ref: >-
+              #/definitions/OBJECT_CustomerBasicData
+  RESPONSE_RegisterCustomerBasicDataResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - RegisterCustomerBasicDataResponse
+    type: object
+    properties:
+      RegisterCustomerBasicDataResponse:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountIdentification:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+
+
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+

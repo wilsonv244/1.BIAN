@@ -1,0 +1,140 @@
+swagger: '2.0'
+info:
+  title: document-services-s
+  version: 1.0.0
+  description: Esta API permite enviar un mensaje de correo electrónico a uno o varios destinatarios.
+basePath: /document-services-s/v1
+paths:
+  /customer-correspondence/provide:
+    post:
+      tags:
+        - BQ - CustomerCorrespondence
+      description: Enviar un mensaje de correo electrónico a uno o varios destinatarios.
+      summary: Enviar un mensaje de correo electrónico a uno o varios destinatarios.
+      operationId: provideCustomerCorrespondence
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/REQUEST_ProvideCustomerCorrespondence'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_ProvideCustomerCorrespondenceResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  REQUEST_ProvideCustomerCorrespondence:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+      - Correspondence
+    type: object
+    properties:
+      Correspondence:
+        type: object
+        description: Objeto que representa el servicio de correspondencia utilizado para la renderización y transmisión de documentos a través de diferentes canales de comunicación.
+        properties:
+          EmailAddresses:
+            type: array
+            description: Lista de correos electrónicos de los destinatarios a los que se enviará la correspondencia.
+            items:
+              type: string
+              example: victor@gmail.com, edgar@gmail.com
+          Document:
+            type: object
+            description: Objeto que contiene datos del documento
+            properties:
+              DocumentSubject:
+                type: string
+                description: Asunto del documento
+                example: Constancia de envío de correo
+              DocumentDescription:
+                type: string
+                description: Contenido del documento
+                example: Este es el contenido del documento...
+              DocumentIdentification:
+                type: integer
+                description: Identificador de plantilla
+                example: 1
+          Attachments:
+            type: array
+            description: Lista de archivos adjuntos que se enviarán junto con la correspondencia.
+            items:
+              type: object
+              properties:
+                FileName:
+                  type: string
+                  description: Nombre del archivo
+                  example: Términos y condiciones
+                Format:
+                  type: string
+                  description: Formato del archivo
+                  example: PDF
+                FileURL:
+                  type: string
+                  description: URL del archivo adjunto
+                  example: www.tyc.losandes.pe/doc.pdf
+  RESPONSE_ProvideCustomerCorrespondenceResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - ProvideCustomerCorrespondenceResponse
+    type: object
+    properties:
+      ProvideCustomerCorrespondenceResponse:
+        type: object
+        description: Objeto que contiene los datos de respuesta para el registro de cuenta.
+        properties:
+          Transaction:
+            type: object
+            description: Objeto que contiene la información relacionada al registro de cuenta
+            properties:
+              TransactionIdentification:
+                type: integer
+                description: Un identificador que permite hacer referencia de forma única a una instancia de una transacción.
+                example: 112

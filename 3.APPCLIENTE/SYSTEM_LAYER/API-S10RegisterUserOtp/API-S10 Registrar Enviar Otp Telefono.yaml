@@ -1,0 +1,102 @@
+swagger: '2.0'
+info:
+  title:  party-authentication-s 
+  version: 1.0.0
+  description: Esta API permite procesar las operaciones y procesos relacionados con la determinación, cálculo y aplicación de tarifas y comisiones en servicios financieros.
+basePath: / party-authentication-s/v1
+paths:
+  /authentication-devices/register:
+    post:
+      tags:
+      - authentication-devices 
+      description: Registrar telefono para usar servicio OTP
+      summary: Registrar telefono para usar servicio OTP
+      operationId: postAuthenticationDevices
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_RegisterAuthenticationDevices
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RegisterAuthenticationDevicesResponse
+          description: OK
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: InvalidParameter
+        '403':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description:  Authorization Error 
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Resource Not Found
+        '429':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Throttled
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Error
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  REQUEST_RegisterAuthenticationDevices:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+      - RegisterAuthenticationDevices
+    type: object
+    properties:
+      RegisterAuthenticationDevices:
+        type: object
+        description: Objeto que contiene los datos de solicitud para la configuración de registro de telefono y usar el servicio OTP.
+        properties:
+          Contact:
+            type: object
+            description: Objeto que contiene la información relacionada al registrar enviar otp telefono
+            properties:
+              MobilePhoneNumber:
+                type: integer
+                description: Numero de telefono
+                example: "951865876"
+  RESPONSE_RegisterAuthenticationDevicesResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - RegisterAuthenticationDevicesResponse
+    type: object
+    properties:
+      RegisterAuthenticationDevicesResponse:
+        type: object
+        description: Objeto que contiene los datos de respuesta de la configuración de registrar enviar otp telefono
+        properties:
+          TransactionIdentification:
+                        type: integer
+                        example: "666555"
+
+  

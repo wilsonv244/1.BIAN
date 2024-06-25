@@ -1,0 +1,383 @@
+swagger: '2.0'
+info:
+  title: payment-order-s
+  version: 1.0.0
+  description: API que permite la generación de orden de transferencia interbancaria
+basePath: /payment-order-s/v1
+paths:
+  /external-transfers/create:
+    post:
+      tags:
+      - BQ - ExternalTransfers
+      operationId: postExternalTransfers
+      description: Generación de orden de transferencia interbancaria
+      summary: Generación de orden de transferencia interbancaria
+      produces:
+        - application/json
+      parameters:
+        - name: channelIdentification
+          in: header
+          description: Indicador del canal
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Indicador del mensaje
+          required: true
+          type: string
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_CreateExternalTransfers
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_CreateExternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error  
+  REQUEST_CreateExternalTransfers:
+    description: ''
+    required:
+      - CreateExternalTransfers
+    type: object
+    properties:
+      CreateExternalTransfers:
+        description: 'Objeto que representa al cuerpo de mensaje'
+        properties:
+          Transaction:
+            type: object
+            description: 'Objeto que representa a la información de la transacción'
+            properties:
+              MessageTypeId:
+                type: string
+                description: 'Hace referencia al Código de Mensaje'
+                example: '0200'
+              TransactionReference:
+                type: string
+                description: 'Código de Referencia de la transferencia '
+                example: '1234'
+              ReferenceTransactionId:
+                type: string
+                description: 'Identificador o Instruction ID generado durante la consulta de cuenta'
+                example: '1'
+              Type:
+                type: string
+                description: 'Código de Transacción Extendida'
+                example: '320'
+              ApplicationCriteria:
+                type: string
+                description: 'Hace referencia al Criterio de Aplicación'
+                example: 'M'
+              SameCustomerFlag:
+                type: string
+                description: 'Indicador de Mismo Cliente, usado para determinar afectación de ITF'
+                example: 'O'
+              PurposeCode:
+                type: string
+                description: 'Hace referencia al Concepto de cobro de tarifa '
+                example: 'OTHR'
+              UnstructuredInformation:
+                type: string
+                description: 'Indique la razón'
+                example: 'O'
+              GrossSalary:
+                type: object
+                properties:
+                  Amount:
+                      type: object
+                      properties:
+                        Value:
+                          description: 'Hace referencia a Importe de Sueldos Brutos'
+                          example: '1000'
+              SalaryPaymentIndicator:
+                type: string
+                description: 'Corresponde al Indicador Pago Haberes'
+                example: 'O'
+              MonthOfThePayment:
+                type: string
+                description: ' Hace referencia al Mes de Pago'
+                example: '02'
+              YearOfThePayment:
+                type: string
+                description: 'Hace referencia al Año de Pago'
+                example: '2024'
+          Channel:
+            type: object
+            description: 'Objeto que contiene la información del canal'
+            properties:
+              ChannelReference:
+                type: string
+                description: 'Identificación del canal'
+                example: '11'
+          Amount:
+            type: object
+            description: 'Objeto que contiene la información de los montos'
+            properties:
+                Value:
+                  type: string
+                  description: 'Hace referencia al importe de la operación'
+                  example: '250000'
+          CurrencyDetails:
+            type: object
+            description: 'Objeto que contiene la información de la moneda'
+            properties:
+                Code:
+                  type: string
+                  description: 'Código de Moneda de la Transacción'
+                  example: '604'
+          Commission:
+            type: object
+            description: 'Información de las comisiones'
+            properties:
+                Code:
+                  type: string
+                  description: 'Hace referencia al Código de Tarifa'
+                  example: '0105'
+                Amount:
+                  type: object
+                  description: 'Objeto que contiene la información de los montos de la comisión'
+                  properties:
+                      Value:
+                        type: string
+                        description: 'Hace referencia al Importe de Comisión'
+                        example: '250000'
+          CreditorAgent:
+            type: object
+            description: 'Objeto que contiene la información del institución financiera del creditor'
+            properties:
+              FinancialInstitution:
+                type: object
+                description: 'Objeto que contiene la información de la institución financiera'
+                properties:
+                  Identification:
+                    type: string
+                    description: 'Código de la Entidad Receptora'
+                    example: '250000'
+          Creditor:
+            type: object
+            description: 'Objeto que representa al creditor quien recibe el dinero'
+            properties:
+              CreditCard:
+                type: string
+                description: 'Código de Tarjeta de Crédito del Cliente'
+                example: '123456789'
+              PersonName:
+                type: object
+                description: 'Objeto que contiene la información del creditor'
+                properties:
+                  FullName:
+                    type: string
+                    description: 'Corresponde al nombre del Cliente Receptor'
+                    example: 'Jhon Doe'
+              Location:
+                type: object
+                description: 'Objeto que contiene la información de la dirección del creditor'
+                properties:
+                  Address:
+                    type: string
+                    description: 'Dirección del Cliente Receptor'
+                    example: 'Dirección'
+              Contact:
+                type: object
+                description: 'Objeto que contiene la información de la dirección del teléfono'
+                properties:
+                  PhoneNumber:
+                    type: string
+                    description: 'Número de teléfono fijo del Cliente Receptor'
+                    example: '97145847'
+                  MobileNumber:
+                    type: string
+                    description: 'Número de celular del Cliente Receptor'
+                    example: '858885474'
+              Account:
+                type: object
+                description: 'Objeto que contiene la información de la dirección de la cuenta del creditor'
+                properties:
+                  CCIIdentification:
+                    type: string
+                    description: 'Código de Cuenta Interbancario del Cliente Receptor '
+                    example: '123456789'
+          DebtorAgent:
+            type: object
+            description: 'Objeto que contiene la información del institución financiera del deudor'
+            properties:
+              FinancialInstitution:
+                type: object
+                description: 'Objeto que contiene la información de la institución financiera'
+                properties:
+                  Identification:
+                    type: string
+                    description: 'Código de la Entidad Originante '
+                    example: '250000'
+          Debtor:
+            type: object
+            description: 'Objeto que representa al debtor quien envia el dinero'
+            properties:
+              PersonName:
+                type: object
+                description: 'Objeto que representa al deudor'
+                properties:
+                  FullName:
+                    type: string
+                    description: 'Nombre del Cliente Originante'
+                    example: 'Jane Doe'
+              PersonIdentification:
+                type: object
+                description: 'Objeto que representa al deudor'
+                properties:
+                  PersonType:
+                    type: string
+                    description: 'Tipo de Persona del Cliente Originante'
+                    example: '1'
+                  TypeOfIdentification:
+                    type: string
+                    description: 'Tipo de Documento del Cliente Originante'
+                    example: '1'
+                  IdentityCardNumber:
+                    type: string
+                    description: ' Número de Documento del Cliente Originante'
+                    example: 'Jhon Doe'
+              Contact:
+                type: object
+                description: 'Objeto que contiene la información del telefono del deudor'
+                properties:
+                  PhoneNumber:
+                    type: string
+                    description: 'Número de teléfono fijo del Cliente Originante'
+                    example: '97145847'
+                  MobileNumber:
+                    type: string
+                    description: 'Número de celular del Cliente Originante'
+                    example: '858885474'
+              Location:
+                type: object
+                description: 'Dirección del Cliente Originante'
+                properties:
+                  Address:
+                    type: string
+                    description: 'Dirección del Cliente Originante'
+                    example: 'Dirección'
+              Account:
+                type: object
+                description: 'Objeto que contiene la información de la dirección de la cuenta del deudor'
+                properties:
+                  CCIIdentification:
+                    type: string
+                    description: 'Código de Cuenta Interbancario del Cliente Originante'
+                    example: '123456789'
+  RESPONSE_CreateExternalTransfersResponse:
+    description: ''
+    required:
+      - CreateExternalTransfersResponse
+    type: object
+    properties:
+      CreateExternalTransfersResponse:
+        description: 'Objeto que representa al cuerpo de mensaje'
+        properties:
+          Transaction:
+            type: object
+            description: 'Objeto que representa a la información de la transacción'
+            properties:
+              ResponseDate:
+                type: string
+                description: 'Fecha Local de la transacción'
+                example: '16072024'
+              ResponseTime:
+                type: string
+                description: 'Hora Local de la transacción'
+                example: '123400'
+              TerminalId:
+                type: string
+                description: 'Código de identificación de terminal'
+                example: '1'
+              RetrievalReferenteNumber:
+                type: string
+                description: 'Número de referencia'
+                example: '2024'
+              ResponseCode:
+                type: string
+                description: 'Código de Respuesta'
+                example: '100'
+              SettlementDate:
+                type: string
+                description: 'La razón del código de respuesta o Respuesta Aplicativa'
+                example: 'Respuesta'
+              ReasonCode:
+                type: string
+                description: 'Hace referencia a la fecha de liquidación'
+                example: '100'
+              InstructionId:
+                type: string
+                description: 'Autogenerado de identificación única de transacción'
+                example: '1'
+              CreationDate:
+                type: string
+                description: 'A Fecha Local de la transacción'
+                example: '16052024'
+              CreationTime:
+                type: string
+                description: 'Hora Local de la transacción'
+                example: '120000'
+              InterbankSettlement:
+                type: object
+                properties:
+                  Amount:
+                    type: object
+                    properties:
+                      Value:
+                        description: 'Hace referencia al monto de liquidación interbancaria'
+                        example: 'O'

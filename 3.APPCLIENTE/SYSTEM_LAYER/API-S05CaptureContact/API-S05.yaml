@@ -1,0 +1,119 @@
+swagger: "2.0"
+info:
+  title: /party-reference-data-directory-s
+  version: 1.0.0
+  description: Esta API permite registrar información de contacto proporcionados a través de la APP y utilizados para el envío de OTP.
+basePath: /party-reference-data-directory-s/v1
+paths:
+  /customer-basic-data/contact/capture:
+    patch:
+      tags:
+        - BQ - CustomerBasicData
+      operationId: patchCustomerContactData
+      description: Registrar los datos de contacto del cliente proporcionados a través de la APP,  utilizados para el envío de OTP.
+      summary: Registrar los datos de contacto del cliente proporcionados a través de la APP,  utilizados para el envío de OTP.
+      produces:
+        - application/json
+      parameters:
+        - name: accountIdentification
+          in: query
+          description: Número de cuenta del cliente.
+          required: true
+          type: integer
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_CaptureCustomerBasicData
+          in: body
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_CaptureCustomerBasicDataResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+definitions:
+  OBJECT_CustomerContactData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada.
+    type: object
+    properties:
+      Contact:
+        description: Objeto que almacena información de contacto relacionada al cliente.
+        type: object
+        properties:
+          EmailAddress:
+            description: Dirección de correo electrónico.
+            type: string
+          PhoneNumber:
+            description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
+            type: string
+  REQUEST_CaptureCustomerBasicData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    type: object
+    properties:
+      CaptureCustomerBasicData:
+        $ref: >-
+              #/definitions/OBJECT_CustomerContactData
+  RESPONSE_CaptureCustomerBasicDataResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - CaptureCustomerBasicDataResponse
+    type: object
+    properties:
+      CaptureCustomerBasicDataResponse:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountIdentification:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+
+
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error  

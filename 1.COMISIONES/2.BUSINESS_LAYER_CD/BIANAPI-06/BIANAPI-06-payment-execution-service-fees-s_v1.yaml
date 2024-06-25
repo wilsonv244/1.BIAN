@@ -1,0 +1,185 @@
+swagger: '2.0'
+info:
+  title: payment-to-information-association-b
+  version: 1.0.0
+  description: Esta API expone la funcionalidad de listar comisiones específicamente en transferencias internas para cuentas digitales.
+basePath: /payment-to-information-association-b/v1
+paths:
+  /internal-transfers/retrieve:
+    get:
+      tags:
+      - internal-transfers
+      operationId: getInternalTransfers
+      description: Exponer la funcionalidad de listar comisiones en transferencias internas para cuentas digitales.
+      summary: Exponer la funcionalidad de listar comisiones en transferencias internas para cuentas digitales.
+      produces:
+        - application/json
+      parameters:
+        - name: AdditionalProductCode
+          in: query
+          description: Código del producto de la operación
+          required: true
+          type: integer
+        - name: ProductChannelReference
+          in: query
+          description: Código del canal de apertura Ventanilla ó Aplicativo
+          required: true
+          type: integer
+        - name: TransactionChannelReference
+          in: query
+          description: Código del canal de operación Ventanilla ó Aplicativo
+          required: true
+          type: integer
+        - name: ComissionType
+          in: query
+          description: Identificador del tipo de concepto de comisión Mantenimiento ó Interplaza ó Plaza
+          required: true
+          type: integer
+        - name: InterplazaIndicator
+          in: query
+          description: Indicardor Interplaza / plaza
+          required: true
+          type: boolean
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RetrieveInternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout          
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  RESPONSE_RetrieveInternalTransfersResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - RetrieveInternalTransfersResponse
+    type: object
+    properties:
+      RetrieveInternalTransfersResponse:
+        type: object
+        description: Objeto que contiene la lista de comisiones para trasnferencia de cuenta digital
+        properties:
+          Commissions:
+            type: array
+            description: Objeto que contiene la lista de comisiones
+            items:
+              type: object
+              properties:
+                Commission:
+                  type: object
+                  description: Objeto que contiene las comisiones
+                  properties:
+                    Code:
+                      type: integer
+                      description: Código de la comisión
+                      example: 1234
+                    ActiveCommissionIndicator:
+                      type: boolean
+                      description: Indicador de Vigencia de la comisión
+                      example: true
+                    DailyFreeOperationCount:
+                      type: integer
+                      description: Cantidad de operaciones libres por día
+                      example: 5
+                    InterplazaTransactionIndicator:
+                      type: boolean
+                      description: Indicador para determinar si es Interplaza ó plaza
+                      example: false
+                    VariableRateIndicator:
+                      type: boolean
+                      description: Indicador para determinar si es tasa Variable ó Fijo
+                      example: false
+                    Amount:
+                      type: object
+                      properties:
+                        Value:
+                          type: number
+                          description: Monto comisión
+                          example: 7.25
+                        MinimumValue:
+                          type: number
+                          description: Monto mínimo
+                          example: 3.25
+                        MaximumValue:
+                          type: number
+                          description: Monto máximo
+                          example: 17.25
+                    VariableAmount:
+                      type: object
+                      properties:
+                        MinimumValue:
+                          type: number
+                          description: Monto mínimo variable
+                          example: 1.25
+                        MaximumValue:
+                          type: number
+                          description: Monto máximo variable
+                          example: 7.25
+                    Transactions:
+                      type: array
+                      description: Información de las comisiones
+                      items:
+                        type: object
+                        properties:
+                          Transaction:
+                            type: object
+                            description: Objeto que contiene la información de transacción
+                            properties:
+                              Code:
+                                type: integer
+                                description: Código de concepto de operación
+                                example: 567
+                              AdditionalInformation:
+                                type: integer
+                                description: Descripción del concepto de la operación
+                                example: Operación de transferencia
+                

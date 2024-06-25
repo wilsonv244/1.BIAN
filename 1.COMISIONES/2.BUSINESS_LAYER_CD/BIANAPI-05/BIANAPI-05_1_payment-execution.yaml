@@ -1,0 +1,205 @@
+swagger: '2.0'
+info:
+  title: payment-to-information-association-b
+  version: 1.0.0
+  description: Esta API expone funcionalidades para registrar comisiones relacionadas con transferencias internas en cuentas digitales.
+basePath: /payment-to-information-association-b/v1
+paths:
+  /internal-transfers/register:
+    post:
+      tags:
+      - internal-transfers
+      description: Exponer la API para registrar comisiones de transferencias internas en cuentas digitales
+      summary: Exponer la API para registrar comisiones de transferencias internas en cuentas digitales
+      operationId: postInternalTransfers
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_RegisterInternalTransfers
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RegisterInternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      status_code:
+        type: string
+        description: Código de error
+      status:
+        type: string
+        description: Estado
+      message:
+        type: string
+        description: Mensaje de error
+  REQUEST_RegisterInternalTransfers:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+      - RegisterInternalTransfers
+    type: object
+    properties:
+      RegisterInternalTransfers:
+        type: object
+        description: Objeto que contiene los datos de solicitud para la configuración de tarifas y comisiones.
+        properties:
+          Commissions:
+            type: object
+            description: Objeto que contiene la información relacionada a comisiones
+            properties:
+              Code:
+                type: integer
+                description: Código de la comisión
+                example: 1
+              Type:
+                type: integer
+                description: LimiteMonto / Operación / Mantenimiento
+                example: 1  
+              InterplazaTransactionIndicator:
+                type: boolean
+                description: Aplica Inter-Plaza/Plaza
+                example: false
+              VariableRateIndicator:
+                type: boolean
+                description: Indicador para determinar si aplica ComisionFija / Variable
+                example: false
+              DailyFreeOperationCount:
+                type: integer
+                description: Cantidad de operación gratis por día
+                example: 1
+              ActiveCommissionIndicator:
+                type: boolean
+                description: Vigencia de la configuración
+                example: false
+              Amount:
+                type: object
+                description: Objeto que contiene los montos de las comisiones
+                properties:
+                  Value:
+                    type: number
+                    description: Monto de la comisión
+                    example: 2000.5
+                  MinimumValue:
+                    type: number
+                    description: Monto mínimo
+                    example: 2.55
+                  MaximumValue:
+                    type: number
+                    description: Monto máximo
+                    example: 10.25
+              VariableAmount:
+                type: object
+                description:  Objeto que contiene montos variables  
+                properties:
+                  MinimumValue:
+                    type: number
+                    description: Monto valor máximo
+                    example: 2.55
+                  MaximumValue:
+                    type: number
+                    description: Monto valor mínimo
+                    example: 10.25
+              Transaction:
+                type: object
+                description: Objeto que contiene la información de las transacciones
+                properties:
+                  TransactionReasons:
+                    type: array
+                    items:
+                      type: string
+                    description: Código del producto de la operación
+                    example: [501,102]
+                  Channel:
+                    type: object
+                    description: Objeto que contiene la información del canal
+                    properties:
+                      ChannelReference:
+                        type: integer
+                        description: Código del canal de operación Ventanilla ó Aplicativo
+                        example: 101
+              Product:
+                type: object
+                description: Objeto que contiene la información de los productos
+                properties:
+                  AdditionalProductCode:
+                    type: integer
+                    description: Código del producto de la operación
+                    example: 501
+                  Module:
+                    type: object
+                    description: Objeto que contiene la información del módulo del producto
+                    properties:
+                      ModuleReference:
+                        type: integer
+                        description: Código del módulo Ahorros / Créditos
+                        example: 0
+                  Channel:
+                    type: object
+                    description: Objeto que contiene la información del canal
+                    properties:
+                      ChannelReference:
+                        type: integer
+                        description: Código del canal de apertura Ventanilla ó Aplicativo
+                        example: 101
+  RESPONSE_RegisterInternalTransfersResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - RegisterInternalTransfersResponse
+    type: object
+    properties:
+      RegisterInternalTransfersResponse:
+        type: object
+        description: Objeto que contiene los datos de respuesta de la configuración de tarifas y comisiones
+        properties:
+          Code:
+            type: integer
+            description: Código de respuesta 
+            example: 100
+          Message:
+            type: string
+            description: Mensaje de la operación realizada
+            example: Transacción OK

@@ -1,0 +1,112 @@
+swagger: '2.0'
+info:
+  title: customer-management-onboarding-b    
+  version: 1.0.0
+  description: Esta API permite validar por número de Documento de Identidad si el cliente está registrado en el corebank.
+basePath: /customer-management-onboarding-b/v1
+paths:
+  /customer-validation/retrieve:
+    get:
+      tags:
+      - BQ - CustomerValidation
+      operationId: validateCustomer
+      description: Valida si el cliente está registrado en el corebank según el número de Documento
+      summary: Valida si el cliente está registrado en el corebank según el número de Documento
+      produces:
+        - application/json
+      parameters:
+        - name: typeOfIdentification
+          in: query
+          description: Determina el ID del tipo de documento.    
+          required: true
+          type: integer
+        - name: identityCardNumber
+          in: query
+          description: Número único asignado por el banco para identificar al cliente.
+          required: true
+          type: string
+        - name: IMEI
+          in: query
+          description: El IMEI del dispositivo, que es un identificador único de 15 dígitos para dispositivos móviles.
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Una cadena que representa la traza de la petición de validación del cliente. 
+          required: true
+          type: string
+        - name: securityToken 
+          in: header
+          description: LLave secreta para consumir los servicios sin JWT.
+          required: true
+          type: string
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/RESPONSE_EvaluateCustomerValidationResponse'
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Bad Request
+        '401':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Not Found
+        '422':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Gateway Timeout
+definitions:
+  RESPONSE_EvaluateCustomerValidationResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - EvaluateCustomerValidationResponse
+    type: object
+    properties:
+      EvaluateCustomerValidationResponse:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountNumber:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+          AuthenticationTokenKeynua:
+            description: Un token se utiliza para verificar una autenticación ya realizada, proporcionado por el servicio de Keynua.
+            type: string
+            example: eyJ0eXAiOiJKV...9TstTqlChryW4mZGyAgHE9Y
+  HTTPError:
+      type: object
+      properties:
+        status_code:
+          type: string
+          format: string
+        status:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string

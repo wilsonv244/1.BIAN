@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: Customer Management Onboarding
+  version: 1.0.0
+  description: API para la gestión del onboarding de dispositivos del Cliente.
+servers:
+  - url: /customer-management-onboarding-b/v1
+paths:
+  /authentication-device/initiate:
+    post:
+      summary: Iniciar validacion del dispositivo del cliente
+      description: Endpoint para iniciar un dispositivo de autenticación para un cliente.
+      operationId: initiateAuthenticationDevice
+      tags:
+        - Authentication Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateAuthenticationDeviceRequest'
+            examples:
+              example-1:
+                summary: Ejemplo de solicitud
+                value:
+                  MessageIdentification:
+                    CustomerValidationRetrieve: "0a1b2c-3d4e5f6789a-bcd1234ef-567890"
+                    KeynuaHashEvaluate: "067893-4ef5a1b2c3dab-cd124e5f6-7890"
+                  AuthenticationDevice:
+                    PhoneNumber: "951865876"
+      parameters:
+        - name: securityToken
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Token de seguridad para consumir la API.
+          example: my-Secret-key
+        - name: messageIdentification
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Trace de la petición a la API.
+          example: 415146163dg4g5fds64agj6gs9
+        - name: accountIdentification
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Id de la cuenta.
+          example: 154234
+      responses:
+        '200':
+          description: Respuesta exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitiateAuthenticationDeviceResponse'
+              examples:
+                example-1:
+                  summary: Ejemplo de respuesta
+                  value:
+                    InitiateAuthenticationDeviceResponse:
+                      AccountIdentification: "154234"
+        '400':
+          description: Solicitud incorrecta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                example-1:
+                  summary: Ejemplo de respuesta 400
+                  value:
+                    status_code: "400"
+                    status: "Bad Request"
+                    message: "La solicitud contiene datos incorrectos."
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                example-1:
+                  summary: Ejemplo de respuesta 500
+                  value:
+                    status_code: "500"
+                    status: "Internal Server Error"
+                    message: "Se produjo un error inesperado en el servidor."
+components:
+  schemas:
+    InitiateAuthenticationDeviceRequest:
+      type: object
+      required:
+        - MessageIdentification
+        - AuthenticationDevice
+      properties:
+        MessageIdentification:
+          type: object
+          required:
+            - CustomerValidationRetrieve
+            - KeynuaHashEvaluate
+          properties:
+            CustomerValidationRetrieve:
+              type: string
+              description: Identificación del documento.
+            KeynuaHashEvaluate:
+              type: string
+              description: Identificación Keynua.
+        AuthenticationDevice:
+          type: object
+          required:
+            - PhoneNumber
+          properties:
+            PhoneNumber:
+              type: string
+              description: Número de teléfono del dispositivo de autenticación.
+              example: "951865876"
+    InitiateAuthenticationDeviceResponse:
+      type: object
+      properties:
+        InitiateAuthenticationDeviceResponse:
+          type: object
+          properties:
+            AccountIdentification:
+              type: string
+              description: Número de cuenta asociado a la solicitud.
+              example: ""
+    ErrorResponse:
+      type: object
+      properties:
+        status_code:
+          type: string
+          description: Código de estado HTTP.
+          example: "400"
+        status:
+          type: string
+          description: Estado de la respuesta HTTP.
+          example: "Bad Request"
+        message:
+          type: string
+          description: Descripción del error.
+          example: "La solicitud contiene datos incorrectos."

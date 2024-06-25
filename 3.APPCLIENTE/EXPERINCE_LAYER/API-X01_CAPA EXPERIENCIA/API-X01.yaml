@@ -1,0 +1,133 @@
+swagger: '2.0'
+info:
+  title: party-reference-data-directory-x    
+  version: 1.0.0
+  description: Esta API permite obtener datos del cliente registrado en el corebank mediante su número de Documento de Identidad.
+basePath: /party-reference-data-directory-x/v1
+paths:
+  /customer-basic-data/retrieve:
+    get:
+      tags:
+      - BQ - CustomerBasicData
+      operationId: getCustomer
+      description: Obtiene datos del cliente registrado en el corebank.
+      summary: Obtiene datos del cliente registrado en el corebank.
+      produces:
+        - application/json
+      parameters:
+        - name: typeOfIdentification
+          in: query
+          description: Especifica el tipo de identificación alternativa que se puede utilizar para proporcionar una identificación alternativa de la parte identificada. 
+          required: true
+          type: integer
+        - name: identityCardNumber
+          in: query
+          description: Número único asignado por el banco para identificar al cliente.
+          required: true
+          type: string
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/RESPONSE_RetrieveCustomerBasicDataResponse'
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Bad Request
+        '401':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Not Found
+        '422':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: '#/definitions/HTTPError'
+          description: Gateway Timeout
+definitions:
+  OBJECT_CustomerBasicData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada.
+    type: object
+    properties:
+      PersonIdentification:
+        description: Objeto que almacena información relacionada al cliente.
+        type: object
+        properties:
+          CustomerIdentificationNumber:
+            description: Número único asignado por el banco para identificar al cliente.
+            type: integer
+          TypeOfIdentification:
+            description: Determina el ID del tipo de documento.  
+            type: integer
+          IdentityCardNumber:
+            description: Número único asignado por el banco para identificar al cliente.
+            type: string
+      Person:
+        description: Objeto que almacena información adicional relacionada al cliente.
+        type: object
+        properties:
+          Gender:
+            description: Especifica el género de la persona.  
+            type: integer
+            example: 1
+          BirthDate:
+            description: Fecha en la que nace una persona.
+            type: string
+      PersonName:
+        description: Objeto que almacena información relacionada al cliente.
+        type: object
+        properties:
+          LastName:
+            description: Determina el apellido paterno de la persona.
+            type: string
+          MothersLastName:
+            description: Determina el apellido materno de la persona.
+            type: string
+          GivenName:
+            description: Determina el primer nombre o nombres dados de la persona.
+            type: string
+      Contact:
+        description: Objeto que almacena información de contacto relacionada al cliente.
+        type: object
+        properties:
+          EmailAddress:
+            description: Dirección de correo electrónico.
+            type: string
+          PhoneNumber:
+            description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
+            type: string
+  RESPONSE_RetrieveCustomerBasicDataResponse:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    type: object
+    properties:
+      RetrieveCustomerBasicDataResponse:
+        $ref: >-
+              #/definitions/OBJECT_CustomerBasicData
+  HTTPError:
+      type: object
+      properties:
+        status_code:
+          type: string
+          format: string
+        status:
+          type: string
+          format: string
+        message:
+          type: string
+          format: string
