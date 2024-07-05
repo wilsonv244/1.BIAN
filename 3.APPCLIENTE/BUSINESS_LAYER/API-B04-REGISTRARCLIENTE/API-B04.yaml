@@ -1,43 +1,30 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
-  title: customer-management-onboarding-b
+  title: correspondence-s
   version: 1.0.0
-  description: Esta API permite registrar información básica del cliente, dispositivo y acuerdos.
-basePath: /customer-management-onboarding-b/v1 
+  description: Esta API permite enviar un mensaje de correo electrónico a uno o varios destinatarios.
+basePath: /correspondence-s/v1
 paths:
-  /customer-account/register:
+  /outbound-correspondence/provide:
     post:
       tags:
-        - BQ - CustomerAccount
-      operationId: postCustomerAccount
-      description: Registrar información básica del cliente, dispositivo y acuerdos.
-      summary: Registrar información básica del cliente, dispositivo y acuerdos.
+        - BQ - OutboundCorrespondence
+      description: Enviar un mensaje de correo electrónico a uno o varios destinatarios.
+      summary: Enviar un mensaje de correo electrónico a uno o varios destinatarios.
+      operationId: provideOutboundCorrespondence
       produces:
         - application/json
       parameters:
-        - name: securityToken
-          in: query
-          description: Llave secreta para consumir los servicios sin JWT.
-          required: true
-          type: string
-        - name: messageIdentification
-          in: query
-          description: Traza de la petición de registro de cliente.
-          required: true
-          type: string
-        - name: accountIdentification
-          in: query
-          description: Número de cuenta del cliente.
-          required: true
-          type: string
         - name: body
           in: body
           required: true
           schema:
-            $ref: '#/definitions/REQUEST_RetrieveCustomerAccount'
+            $ref: '#/definitions/REQUEST_ProvideOutboundCorrespondence'
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_ProvideOutboundCorrespondenceResponse'
         '204':
           description: No Content
         '400':
@@ -69,184 +56,98 @@ paths:
           schema:
             $ref: '#/definitions/errorResponse'
 definitions:
-  REQUEST_RetrieveCustomerAccount:
-    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
-    required:
-      - RegisterCustomerAccount
-    type: object
-    properties:
-      RegisterCustomerAccount:
-        description: Objeto que almacena el mensaje de solicitud.
-        type: object
-        properties:
-          Account:
-            description: Objeto que administra la información de las cuentas.
-            type: object
-            properties:
-              AccountIdentification:
-                description: Número de cuenta del cliente.
-                type: string
-                example: 901234567890
-          AuthenticationMethod:
-            description: Objeto que contiene método de autenticación.
-            type: object
-            properties:
-              CognitoAuthIdentifier:
-                description: Identificador del proveedor de autenticación.
-                type: string
-                example: "cognitoAuthIdentifier123"
-              Password:
-                description: Autenticación mediante una contraseña.
-                type: string
-                example: "password123"
-          PersonIdentification:
-            description: Objeto que almacena información relacionada con la identificación del cliente.
-            type: object
-            properties:
-              CustomerIdentificationNumber:
-                description: Número único asignado por el banco para identificar al cliente.
-                type: integer
-                example: 123456789
-              TypeOfIdentification:
-                description: Determina el ID del tipo de documento.
-                type: integer
-                example: 1
-              IdentityCardNumber:
-                description: Número asignado por una autoridad nacional a una tarjeta de identidad.
-                type: string
-                example: "ABC123456"
-          PersonName:
-            description: Objeto que almacena información relacionada al cliente.
-            type: object
-            properties:
-              LastName:
-                description: Determina el apellido paterno de la persona.
-                type: string
-                example: "Pérez"
-              MothersLastName:
-                description: Determina el apellido materno de la persona.
-                type: string
-                example: "García"
-              GivenName:
-                description: Determina el primer nombre o nombres dados de la persona.
-                type: string
-                example: "Juan"
-          Contact:
-            description: Objeto que almacena información de contacto relacionada al cliente.
-            type: object
-            properties:
-              EmailAddress:
-                description: Dirección de correo electrónico.
-                type: string
-                example: "juan.perez@example.com"
-              PhoneNumber:
-                description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
-                type: string
-                example: "+1234567890"
-          Device:
-            description: Objeto que almacena información del dispositivo del cliente.
-            type: object
-            properties:
-              ApplicationVersion:
-                description: Este campo almacena la versión de la aplicación que está siendo utilizada en el dispositivo.
-                type: string
-                example: "1.0.0"
-              DeviceOperatingSystem:
-                description: El sistema operativo instalado en el dispositivo.
-                type: string
-                example: "Android"
-              DeviceModel:
-                description: Este campo almacena el modelo del dispositivo.
-                type: string
-                example: "Samsung Galaxy S10"
-              DeviceVersion:
-                description: Versión de sistema operativo.
-                type: string
-                example: "10.0"
-              CountryCode:
-                description: Código para identificar un país, basado en los nombres de los países obtenidos de las Naciones Unidas.
-                type: string
-                example: "PE"
-              LatitudeAddress:
-                description: La latitud de la ubicación del dispositivo.
-                type: string
-                example: "-12.04318"
-              LongitudeAddress:
-                description: La longitud de la ubicación del dispositivo.
-                type: string
-                example: "-77.02824"
-              DeviceAddress:
-                description: La dirección asociada con el dispositivo, como la dirección de Protocolo de Internet (IP) o la dirección de correo electrónico.
-                type: string
-                example: "192.168.1.1"
-              PackageIdentification:
-                description: Identificación de los paquetes de software a los que pertenece el fragmento.
-                type: string
-                example: "com.example.app"
-              DeviceIdentification:
-                description: Objeto que almacena identificadores únicos del dispositivo.
-                type: object
-                properties:
-                  IMEI:
-                    description: El IMEI del dispositivo, que es un identificador único de 15 dígitos para dispositivos móviles.
-                    type: string
-                    example: "123456789012345"
-                  MAC:
-                    description: La dirección MAC del dispositivo, que es un identificador único para la interfaz de red.
-                    type: string
-                    example: "00:1B:44:11:3A:B7"
-          MailingInstructions:
-            description: Objeto que almacena características de una dirección.
-            type: object
-            properties:
-              MailingIndicator:
-                description: Indica si el correo debe enviarse a una dirección.
-                type: string
-                example: "Yes"
-          MessageIdentification:
-            description: Identifica un mensaje mediante un identificador único y la fecha y hora en que el remitente creó el mensaje.
-            type: object
-            properties:
-              CustomerValidationRetrieve:
-                description: Traza de la petición validar cliente CLA 
-                type: string
-                example: "5JHJKS61GEfdgeg446DFG"
-              KeynuaHashEvaluate:
-                description: Token ID de resultado satisfactorio Plugin Keynua.
-                type: string
-                example: "Keynua123"  
-              AuthenticationDeviceRegister:
-                description: Traza de la petición de OTP.
-                type: string
-                example: "OTPRequest123"
-              AuthenticationDeviceUpdate:
-                description: Traza de la validación de OTP.
-                type: string
-                example: "OTPValidate123"
-          Agreements:
-            description: Array que almacena un acuerdo común, formal o informal, entre dos o más partes.
-            type: array
-            items:
-              type: object
-              properties:
-                AgreementIdentification:
-                  description: El identificador del acuerdo, como el Número de Acuerdo, Número de Contrato, Número de Registro de Contrato, etc.
-                  type: integer
-                  example: 1
-                AgreementStatus:
-                  description: Una característica del acuerdo que se refiere al Estado del Ciclo de Vida del acuerdo.
-                  type: string
-                  example: "Active"
-
   errorResponse:
     type: object
     properties:
-      status_code:
-        type: string
-        description: Código de error
-      status:
-        type: string
-        description: Estado del error
-      message:
-        type: string
-        description: Mensaje de error
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  REQUEST_ProvideOutboundCorrespondence:
+    description: 'Objeto que contiene el cuerpo del mensaje de solicitud.'
+    required:
+      - ProvideOutboundCorrespondence
+    type: object
+    properties:
+      ProvideOutboundCorrespondence:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Correspondence:
+            type: object
+            description: Objeto que representa el servicio de correspondencia utilizado para la renderización y transmisión de documentos a través de diferentes canales de comunicación.
+            properties:
+              EmailAddresses:
+                type: array
+                description: Lista de correos electrónicos de los destinatarios a los que se enviará la correspondencia.
+                items:
+                  type: string
+                  example: "juan.perez@gmail.com"
+              CarbonCopyEmails:
+                type: array
+                description: Lista de correos electrónicos de los destinatarios en copia (CC).
+                items:
+                  type: string
+                example: 
+                  - "maria.lopez@cajalosandes.com"
+                  - "carlos.gomez@protecso.com"
+                  - "luisa.morales@gmail.com"
+              BlindCarbonCopyEmails:
+                type: array
+                description: Lista de correos electrónicos de los destinatarios en copia oculta (CCO).
+                items:
+                  type: string
+                example: 
+                  - "carlos.garcia@cajalosandes.com"
+                  - "eduardo.soto@cajalosandes.com"
+              CorrespondenceTemplate:
+                type: string
+                description: Plantilla utilizada para ensamblar correspondencia 
+                example: "{ \"subject\":\"Bienvenido a Caja Los Andes\", \"name\":\"Ernesto\", \"message\": \"¡Bienvenido, Ernesto! Te damos la bienvenida a Caja Los Andes. Esperamos que disfrutes tu experiencia con nosotros.\" }"
+              CorrespondenceTemplateReference:
+                type: string
+                description: Referencia a una plantilla utilizada para ensamblar correspondencia
+                example: "Welcome Template"
+              Attachments:
+                type: array
+                description: Lista de archivos adjuntos que se enviarán junto con la correspondencia.
+                items:
+                  type: object
+                  properties:
+                    FileName:
+                      type: string
+                      description: Nombre del archivo
+                      example: Términos y condiciones
+                    Format:
+                      type: string
+                      description: Formato del archivo
+                      example: PDF
+                    FileURL:
+                      type: string
+                      description: URL del archivo adjunto
+                      example: www.tyc.losandes.pe/doc.pdf
+  RESPONSE_ProvideOutboundCorrespondenceResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - ProvideOutboundCorrespondenceResponse
+    type: object
+    properties:
+      ProvideOutboundCorrespondenceResponse:
+        type: object
+        description: Objeto que contiene los datos de respuesta para el registro de cuenta.
+        properties:
+          Transaction:
+            type: object
+            description: Objeto que contiene la información relacionada al registro de cuenta
+            properties:
+              TransactionIdentification:
+                type: integer
+                description: Un identificador que permite hacer referencia de forma única a una instancia de una transacción.
+                example: 112

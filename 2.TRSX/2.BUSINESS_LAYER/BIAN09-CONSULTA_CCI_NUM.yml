@@ -1,0 +1,184 @@
+swagger: '2.0'
+info:
+  title: payment-to-information-association-b
+  version: 1.0.0
+  description: API que expone la consulta de transferencia por recurso. Obtiene la información según cuenta Interbancaria CCI ó número de teléfono
+basePath: /payment-to-information-association-b/v1
+paths:
+  /external-transfers/retrieve:
+    get:
+      tags:
+      - BQ - ExternalTransfers
+      operationId: getExternalTransfers
+      description: Expone la consulta de transferencia por recurso. Obtiene la información según cuenta Interbancaria CCI ó número de teléfono
+      summary: Expone la consulta de transferencia por recurso. Obtiene la información según cuenta Interbancaria CCI ó número de teléfono
+      produces:
+        - application/json
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RetrieveExternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+      parameters:
+        - name: channelIdentification
+          in: header
+          description: Indicador del canal
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Indicador del mensaje
+          required: true
+          type: string
+        - name: resourceIdentification
+          in: query
+          description: Código del tipo de recurso CCI o Interoperabilidad Telefónica.
+          required: true
+          type: integer
+        - name: resourceReference
+          in: query
+          description: Número del Teléfono o CCI
+          required: true
+          type: string
+        - name: originAccountIdentification
+          in: query
+          description: Número de cuenta del cliente originante 
+          required: true
+          type: string
+        - name: userReference
+          in: query
+          description: Código de usuario que ejecuta la transacción
+          required: true
+          type: integer 
+        - name: customerIdentification
+          in: query
+          description: Código del cliente
+          required: true
+          type: integer
+        - name: transactionDate
+          in: query
+          description: Fecha y hora que realiza la consulta
+          required: true
+          type: string  
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  RESPONSE_RetrieveExternalTransfersResponse:
+    description: ''
+    required:
+      - RetrieveExternalTransfersResponse
+    type: object
+    properties:
+      RetrieveExternalTransfersResponse:
+        description: 'Objeto que representa al cuerpo de mensaje'
+        properties:
+          Creditor:
+            type: object
+            description: 'Objeto que representa al creditor quien recibe el dinero'
+            properties:
+              PartyIdentification:
+                type: object
+                description: Objeto que almacena información relacionada al creditor
+                properties:
+                  IdentificationNumber:
+                    type: integer
+                    description: Número de cuenta receptor
+                    example: 45587745
+                  Name:
+                    type: string
+                    description: Nombre del receptor
+                    example: Jhon Doe
+              Account:
+                type: object
+                description: Objeto que almacena información relacionada a las partes de una transacción financiera
+                properties:
+                  CCI:
+                    type: string
+                    description: Número de cuenta Interbancaria
+                    example: '011-0052-89-00012345678'
+          CreditorAgent:
+            type: object
+            description: Objeto que representa a la entidad financiera que actúa en nombre del creditor
+            properties:
+              FinancialInstitutionIdentification:
+                type: object
+                description: Objeto que representa a la información de la entidad financiera del creditor
+                properties:
+                  Identification:
+                    type: string
+                    description: Código del banco
+                    example: 1234
+                  Name:
+                    type: string
+                    description: Nombre del banco
+                    example: Banco de Comercio
+          Debtor:
+            type: object
+            description: Objeto que representa al creditor quien recibe el dinero
+            properties:
+              PartyIdentification:
+                type: object
+                description: Objeto que almacena información relacionada al creditor
+                properties:
+                  IdentificationNumber:
+                    type: integer
+                    description: Número de cuenta receptor
+                    example: 20000123456
+              Account:
+                type: object
+                description: Objeto que almacena información relacionada a las partes de una transacción financiera
+                properties:
+                  Identification:
+                    type: integer
+                    description: Número de cuenta
+                    example: 8900012345678
