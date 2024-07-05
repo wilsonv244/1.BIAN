@@ -1,17 +1,17 @@
 swagger: '2.0'
 info:
-  title: document-services-s
+  title: correspondence-s
   version: 1.0.0
   description: Esta API permite enviar un mensaje de correo electrónico a uno o varios destinatarios.
-basePath: /document-services-s/v1
+basePath: /correspondence-s/v1
 paths:
-  /customer-correspondence/provide:
+  /outbound-correspondence/provide:
     post:
       tags:
-        - BQ - CustomerCorrespondence
+        - BQ - OutboundCorrespondence
       description: Enviar un mensaje de correo electrónico a uno o varios destinatarios.
       summary: Enviar un mensaje de correo electrónico a uno o varios destinatarios.
-      operationId: provideCustomerCorrespondence
+      operationId: provideOutboundCorrespondence
       produces:
         - application/json
       parameters:
@@ -19,12 +19,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/REQUEST_ProvideCustomerCorrespondence'
+            $ref: '#/definitions/REQUEST_ProvideOutboundCorrespondence'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/RESPONSE_ProvideCustomerCorrespondenceResponse'
+            $ref: '#/definitions/RESPONSE_ProvideOutboundCorrespondenceResponse'
         '204':
           description: No Content
         '400':
@@ -59,7 +59,7 @@ definitions:
   errorResponse:
     type: object
     properties:
-      error:
+      errors:
         type: array
         items:
           type: object
@@ -70,63 +70,76 @@ definitions:
             message:
               type: string
               description: Mensaje de error
-  REQUEST_ProvideCustomerCorrespondence:
-    description: Objeto que contiene el cuerpo del mensaje de entrada
+  REQUEST_ProvideOutboundCorrespondence:
+    description: 'Objeto que contiene el cuerpo del mensaje de solicitud.'
     required:
-      - Correspondence
+      - ProvideOutboundCorrespondence
     type: object
     properties:
-      Correspondence:
+      ProvideOutboundCorrespondence:
+        description: Objeto que almacena el mensaje de solicitud.
         type: object
-        description: Objeto que representa el servicio de correspondencia utilizado para la renderización y transmisión de documentos a través de diferentes canales de comunicación.
         properties:
-          EmailAddresses:
-            type: array
-            description: Lista de correos electrónicos de los destinatarios a los que se enviará la correspondencia.
-            items:
-              type: string
-              example: victor@gmail.com, edgar@gmail.com
-          Document:
+          Correspondence:
             type: object
-            description: Objeto que contiene datos del documento
+            description: Objeto que representa el servicio de correspondencia utilizado para la renderización y transmisión de documentos a través de diferentes canales de comunicación.
             properties:
-              DocumentSubject:
+              EmailAddresses:
+                type: array
+                description: Lista de correos electrónicos de los destinatarios a los que se enviará la correspondencia.
+                items:
+                  type: string
+                  example: "juan.perez@gmail.com"
+              CarbonCopyEmails:
+                type: array
+                description: Lista de correos electrónicos de los destinatarios en copia (CC).
+                items:
+                  type: string
+                example: 
+                  - "maria.lopez@cajalosandes.com"
+                  - "carlos.gomez@protecso.com"
+                  - "luisa.morales@gmail.com"
+              BlindCarbonCopyEmails:
+                type: array
+                description: Lista de correos electrónicos de los destinatarios en copia oculta (CCO).
+                items:
+                  type: string
+                example: 
+                  - "carlos.garcia@cajalosandes.com"
+                  - "eduardo.soto@cajalosandes.com"
+              CorrespondenceTemplate:
                 type: string
-                description: Asunto del documento
-                example: Constancia de envío de correo
-              DocumentDescription:
+                description: Plantilla utilizada para ensamblar correspondencia 
+                example: "{ \"subject\":\"Bienvenido a Caja Los Andes\", \"name\":\"Ernesto\", \"message\": \"¡Bienvenido, Ernesto! Te damos la bienvenida a Caja Los Andes. Esperamos que disfrutes tu experiencia con nosotros.\" }"
+              CorrespondenceTemplateReference:
                 type: string
-                description: Contenido del documento
-                example: Este es el contenido del documento...
-              DocumentIdentification:
-                type: integer
-                description: Identificador de plantilla
-                example: 1
-          Attachments:
-            type: array
-            description: Lista de archivos adjuntos que se enviarán junto con la correspondencia.
-            items:
-              type: object
-              properties:
-                FileName:
-                  type: string
-                  description: Nombre del archivo
-                  example: Términos y condiciones
-                Format:
-                  type: string
-                  description: Formato del archivo
-                  example: PDF
-                FileURL:
-                  type: string
-                  description: URL del archivo adjunto
-                  example: www.tyc.losandes.pe/doc.pdf
-  RESPONSE_ProvideCustomerCorrespondenceResponse:
+                description: Referencia a una plantilla utilizada para ensamblar correspondencia
+                example: "Welcome Template"
+              Attachments:
+                type: array
+                description: Lista de archivos adjuntos que se enviarán junto con la correspondencia.
+                items:
+                  type: object
+                  properties:
+                    FileName:
+                      type: string
+                      description: Nombre del archivo
+                      example: Términos y condiciones
+                    Format:
+                      type: string
+                      description: Formato del archivo
+                      example: PDF
+                    FileURL:
+                      type: string
+                      description: URL del archivo adjunto
+                      example: www.tyc.losandes.pe/doc.pdf
+  RESPONSE_ProvideOutboundCorrespondenceResponse:
     description: Objeto que contiene el cuerpo del mensaje de salida
     required:
-      - ProvideCustomerCorrespondenceResponse
+      - ProvideOutboundCorrespondenceResponse
     type: object
     properties:
-      ProvideCustomerCorrespondenceResponse:
+      ProvideOutboundCorrespondenceResponse:
         type: object
         description: Objeto que contiene los datos de respuesta para el registro de cuenta.
         properties:
