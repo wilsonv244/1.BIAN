@@ -1,0 +1,1156 @@
+swagger: '2.0'
+info:
+  title: payment-to-information-association-b
+  version: 1.0.0
+  description: Exponer la api de cálculo de comisiones para transferencias internas y externas para cuenta digital
+basePath: /payment-to-information-association-b/v1
+paths:
+  /external-transfers/retrieve:
+    get:
+      tags:
+      - BQ - ExternalTransfers
+      operationId: getExternalTransfers
+      description: Expone la consulta de transferencia por recurso. Obtiene la información según cuenta Interbancaria CCI ó número de teléfono
+      summary: Expone la consulta de transferencia por recurso. Obtiene la información según cuenta Interbancaria CCI ó número de teléfono
+      produces:
+        - application/json
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RetrieveExternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+      parameters:
+        - name: channelIdentification
+          in: header
+          description: Indicador del canal
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Indicador del mensaje
+          required: true
+          type: string
+        - name: typeOfIdentification
+          in: query
+          description: Determina el ID del tipo de documento.    
+          required: true
+          type: integer
+        - name: identityCardNumber
+          in: query
+          description: Número asignado por una autoridad nacional a una tarjeta de identidad.
+          required: true
+          type: string
+        - name: identificationOrContactInformation
+          in: query
+          description: Codigo de consulta (CCI / INTERO.)
+          required: true
+          type: integer
+        - name: identificationOrContactValue
+          in: query
+          description: Número de identificación de la operación, puede ser un Código de Cuenta Interbancario (CCI) o un número de celular
+          required: true
+          type: string  
+        - name: financialInstitutionIdentification
+          in: query
+          description: Código de la entidad Destino
+          required: true
+          type: integer
+        - name: currencyInternalIdentifier
+          in: query
+          description: Código interno del tipo de moneda
+          type: integer
+  /external-transfers/register:
+    post:
+      tags:
+      - BQ - ExternalTransfers
+      description: Registrar Comisiones Interbancarias
+      summary: Registrar Comisiones Interbancarias
+      operationId: postExternalTransfers
+      produces:
+        - application/json
+      parameters:
+        - name: channelIdentification
+          in: header
+          description: Indicador del canal
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Indicador del mensaje
+          required: true
+          type: string
+        - name: commissionCode
+          in: query
+          description: Código de la comisión
+          required: true
+          type: string
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_RegisterExternalTransfers
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RegisterExternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+  /external-transfers/update:
+    patch:
+      tags:
+      - BQ - ExternalTransfers
+      description: Actualizar Comisiones Interbancarias
+      summary: Actualizar Comisiones Interbancarias
+      operationId: patchExternalTransfers
+      produces:
+        - application/json
+      parameters:
+        - name: channelIdentification
+          in: header
+          description: Indicador del canal
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Indicador del mensaje
+          required: true
+          type: string
+        - name: commissionCode
+          in: query
+          description: Código de la comisión
+          required: true
+          type: string
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_UpdateExternalTransfers
+          in: body
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_UpdateExternalTransfersResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+  /external-transfers/fees/retrieve:
+    get:
+      tags:
+      - BQ - ExternalTransfersFees
+      operationId: getExternalTransfersFees
+      description: Esta API se encarga de exponer y listar la configuración de las comisiones.
+      summary: Esta API se encarga de exponer y listar la configuración de las comisiones.
+      produces:
+        - application/json
+      parameters:
+        - name: channelIdentification
+          in: header
+          description: Indicador del canal
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Indicador del mensaje
+          required: true
+          type: string
+        - name: transactionReference
+          in: query
+          description: Código de tipo de operación interbancaria
+          required: true
+          type: integer
+        - name: transactionChannelReference
+          in: query
+          description: Código del canal de operación Ventanilla ó Aplicativo
+          required: true
+          type: integer
+        - name: identificationOrContactInformation
+          in: query
+          description: Codigo de consulta (CCI / INTERO.)
+          required: true
+          type: integer
+        - name: interplazaTransactionIndicator
+          in: query
+          description: Modulo del negocio (ahorro / creditos)
+          required: true
+          type: boolean
+        - name: financialInstitutionIdentification
+          in: query
+          description: Código de la entidad Destino
+          required: true
+          type: integer
+      responses:
+        '200':
+          schema:
+            $ref: >-
+              #/definitions/RESPONSE_RetrieveExternalTransfersFeesResponse
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Request
+        '401':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Not Found
+        '422':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: >-
+              #/definitions/errorResponse
+          description: Gateway Timeout
+  /contact-sweep/retrieve:
+    get:
+      tags:
+        - BQ - ContactSweep
+      operationId: getSweep
+      summary: Consulta de barrido
+      description: Esta API permite revisar si el listado de números de contacto de un cliente se encuentra registrado en algún directorio de un servicio 
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_RetrieveContactSweepResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+      parameters:
+        - name: channelIdentification
+          in: header
+          description: Indicador del canal
+          required: true
+          type: string
+        - name: messageIdentification
+          in: header
+          description: Indicador del mensaje
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/REQUEST_RetrieveContactSweep'
+definitions:
+  errorResponse:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+  RESPONSE_RetrieveExternalTransfersResponse:
+    description: ''
+    required:
+      - RetrieveExternalTransfersResponse
+    type: object
+    properties:
+      RetrieveExternalTransfersResponse:
+        description: 'Objeto que representa al cuerpo de mensaje'
+        properties:
+          InstructionIdentification:
+            type: string
+            description: 'Autogenerado de identificación única de transacción'
+            example: '5f1a4342e318e8f44cf59b48'   
+          Creditor:
+            type: object
+            description: 'Objeto que representa al creditor quien recibe el dinero'
+            properties:
+              PartyIdentification:
+                type: object
+                description: Objeto que almacena información relacionada al creditor
+                properties:
+                  IdentificationNumber:
+                    type: integer
+                    description: Número de cuenta receptor
+                    example: 45587745
+                  Name:
+                    type: string
+                    description: Nombre del receptor
+                    example: Jhon Doe
+              Account:
+                type: object
+                description: 'Objeto que contiene la información de la dirección de la cuenta del creditor'
+                properties:
+                  CCIIdentification:
+                    type: string
+                    description: 'Código de Cuenta Interbancario del Cliente Receptor '
+                    example: '1234011-0052-89-0001234567856789'
+              PhoneAddress:
+                type: object
+                description: 'Objeto que contiene la información de la dirección del teléfono'
+                properties:
+                  MobileNumber:
+                    type: string
+                    description: 'Número de celular del Cliente Receptor'
+                    example: '+51998885474'
+              BankOperation:
+                type: object
+                properties:
+                  CustomerIndicator:
+                    type: string
+                    description: Indicador booleano que determina si la operación o consulta se está realizando para el mismo cliente.
+                    example: true            
+          CreditorAgent:
+            description: Objeto que almacena la información del creditor 
+            properties:
+              Location:
+                description: Objeto que contiene los datos de locación del creditor
+                properties:
+                  LocationCode:
+                    type: integer
+                    description: Código de la agencia de la entidad del creditor
+                    example: 1
+              FinancialInstitution:
+                description: Objeto que almacena la entidad de la institución financiera del creditor
+                properties:
+                  Identification:
+                    type: string
+                    description: Código de la entidad destino
+                    example: 1
+          Debtor:
+            type: object
+            description: 'Objeto que representa al debtor quien envia el dinero'
+            properties:
+              PersonName:
+                type: object
+                description: 'Objeto que representa al el nombre del cliente originante'
+                properties:
+                  FullName:
+                    type: string
+                    description: 'Nombre del Cliente Originante'
+                    example: 'Jhon James'
+              BankAccounts:
+                type: array
+                description: 'Arreglo de objetos que contienen la información de las cuentas de ahorro'
+                items:
+                  type: object
+                  properties:
+                    AccountIdentification:
+                      type: string
+                      description: 'Número de identificación de la cuenta de ahorros'
+                      example: '12345678901234'
+                    CCIIdentification:
+                      type: string
+                      description: 'Código de Cuenta Interbancario (CCI)'
+                      example: '00212345678901234567'
+                    ProductIdentification:
+                      type: integer
+                      description: 'Identificador del producto'
+                      example: 2
+  REQUEST_RegisterExternalTransfers:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+    - RegisterExternalTransfers
+    type: object
+    properties:
+      RegisterExternalTransfers:
+        type: object
+        required:
+        - RegisterExternalTransfers
+        description: Objeto que contiene la información para registrar las transferencias interbancarias
+        properties:
+          Account:
+            type: object
+            description: Objeto que administra la información de las cuentas
+            properties:
+              AccountType:
+                type: object
+                description: Información del tipo de cuenta
+                properties:
+                  AccountTypeIdentifier:
+                    type: integer
+                    description: Código del tipo de Cuenta
+                    example: 1
+          PersonIdentification:
+            type: object
+            properties:
+              PersonType:
+                type: object
+                description: Información del tipo de persona
+                properties:
+                  PersonTypeIdentifier:
+                    type: integer
+                    description: Código del tipo de persona
+                    example: 1
+          Product:
+            type: object
+            description: Objeto que contiene la información de los productos
+            properties:
+              Module:
+                type: object
+                description: Objeto que contiene la información del módulo del producto
+                properties:
+                  ModuleReference:
+                    type: integer
+                    description: Código del módulo Ahorros / Créditos
+                    example: 0
+              Channel:
+                type: object
+                description: Objeto que contiene la información del canal
+                properties:
+                  ChannelReference:
+                    type: integer
+                    description: Código del canal de apertura Ventanilla ó Aplicativo
+                    example: 101
+                  ChannelDescription:
+                    type: string
+                    description: Descripción del canal de apertura
+                    example: Ventanilla
+              Productidentification:
+                type: object
+                description: Objeto que contiene la información de la identificación delproducto
+                properties:
+                  Identifier:
+                    type: integer
+                    description: Código del producto de la operación
+                    example: 101
+          Transaction:
+            type: object
+            description: Objeto que contiene la información de las transacciones
+            properties:
+              TransactionTypeIdentifier:
+                type: integer
+                description: Código de tipo de operación interbancaria
+                example: 2
+              TransactionTypeName:
+                type: string
+                description: Nombre o descripción del tipo de operación interbancaria 
+              CurrencyDetails:
+                type: object
+                description: Objeto que contiene la información de la moneda
+                properties:
+                  CurrencyInternalIdentifier:
+                    type: integer
+                    description: Identificador interno de la caja
+                    example: 1
+                  CurrencyCodeIdentifier:
+                    type: integer
+                    description: Identificador de la moneda según ISO 4217
+                    example: 604
+                  CurrencyCode:
+                    type: string
+                    description: Código de la moneda según ISO 4217
+                    example: "PEN"
+                  CurrencyName:
+                    type: string
+                    description: Nombre de la moneda en el idioma local 
+                    example: "Soles"  
+              Channel:
+                type: object
+                description: Objeto que contiene la información del canal
+                properties:
+                  ChannelReference:
+                    type: integer
+                    description: Código del canal de operación Ventanilla ó Aplicativo
+                    example: 101
+                  ChannelDescription:
+                    type: string
+                    description: Descripción del canal de operación
+                    example: Operación de transferencia
+                            
+          IdentificationOrContactInformation:
+            type: object
+            description: Objeto que almacena la modalidad de la consulta
+            properties:
+              Identification:
+                type: integer
+                description: Código de consulta (CCI / INTERO.)
+                example: 501
+              Name:
+                type: string
+                description: Nombre de la modalidad destino                                            
+                example: CCI  
+              
+          FinancialInstitution:
+            type: object
+            description: Objeto que identifica la entidad financiera
+            properties:
+              Identification:
+                type: string
+                description: Código de la entidad destino
+                example: 501
+              Name:
+                type: string 
+                description: Descripción de la entidad destino                
+          Commissions:
+            type: object
+            description: Objeto que contiene la información relacionada a comisiones
+            properties:
+              InterplazaTransactionIndicator:
+                type: boolean
+                description: Aplica Inter-Plaza/Plaza
+                example: false
+              VariableRateIndicator:
+                type: boolean
+                description: Indicador para determinar si aplica ComisionFija / Variable
+                example: false
+              MonthlyFreeOperationCount:
+                type: integer
+                description: Cantidad de operación gratis por mes
+                example: 1
+              ActiveCommissionIndicator:
+                type: boolean
+                description: Vigencia de la configuración
+                example: false
+              Amount:
+                type: object
+                description: Objeto que contiene los montos de las comisiones
+                properties:
+                  Value:
+                    type: number
+                    description: Monto de la comisión
+                    example: 2000.5
+              VariableAmount:
+                type: object
+                description:  Objeto que contiene montos variables  
+                properties:
+                  MinimumValue:
+                    type: number
+                    description: Monto valor máximo
+                    example: 2.55
+                  MaximumValue:
+                    type: number
+                    description: Monto valor mínimo
+                    example: 10.25
+  RESPONSE_RegisterExternalTransfersResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - RegisterExternalTransfersResponse
+    type: object
+    properties:
+      RegisterExternalTransfersResponse:
+        type: object
+        description: Objeto que contiene la información de la respuesta del registro de las transferencias interbancarias
+        properties:
+          Code:
+            type: integer
+            description: Código de respuesta 
+            example: 100
+          Message:
+            type: string
+            description: Mensaje de la operación realizada
+            example: Transacción OK
+  REQUEST_UpdateExternalTransfers:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    required:
+      - UpdateExternalTransfers
+    type: object
+    properties:
+      UpdateExternalTransfers:
+        type: object
+        description: Objeto que contiene la información para actualizar las transferencias interbancarias
+        properties:
+          Account:
+            type: object
+            description: Objeto que administra la información de las cuentas
+            properties:
+              AccountType:
+                type: object
+                description: Información del tipo de cuenta
+                properties:
+                  AccountTypeIdentifier:
+                    type: integer
+                    description: Código del tipo de Cuenta
+                    example: 1
+          PersonIdentification:
+            type: object
+            properties:
+              PersonType:
+                type: object
+                description: Información del tipo de persona
+                properties:
+                  PersonTypeIdentifier:
+                    type: integer
+                    description: Código del tipo de persona
+                    example: 1
+          Product:
+            type: object
+            description: Objeto que contiene la información de los productos
+            properties:
+              Module:
+                type: object
+                description: Objeto que contiene la información del módulo del producto
+                properties:
+                  ModuleReference:
+                    type: integer
+                    description: Código del módulo Ahorros / Créditos
+                    example: 0
+              Channel:
+                type: object
+                description: Objeto que contiene la información del canal
+                properties:
+                  ChannelReference:
+                    type: integer
+                    description: Código del canal de apertura Ventanilla ó Aplicativo
+                    example: 101
+                  ChannelDescription:
+                    type: string
+                    description: Descripción del canal de apertura
+                    example: Ventanilla
+              Productidentification:
+                type: object
+                description: Objeto que contiene la información de la identificación delproducto
+                properties:
+                  Identifier:
+                    type: integer
+                    description: Código del producto de la operación
+                    example: 101
+          Transaction:
+            type: object
+            description: Objeto que contiene la información de las transacciones
+            properties:
+              TransactionTypeIdentifier:
+                type: integer
+                description: Código de tipo de operación interbancaria
+                example: 2
+              TransactionTypeName:
+                type: string
+                description: Nombre o descripción del tipo de operación interbancaria 
+              CurrencyDetails:
+                type: object
+                description: Objeto que contiene la información de la moneda
+                properties:
+                  CurrencyInternalIdentifier:
+                    type: integer
+                    description: Identificador interno de la caja
+                    example: 1
+                  CurrencyCodeIdentifier:
+                    type: integer
+                    description: Identificador de la moneda según ISO 4217
+                    example: 604
+                  CurrencyCode:
+                    type: string
+                    description: Código de la moneda según ISO 4217
+                    example: "PEN"
+                  CurrencyName:
+                    type: string
+                    description: Nombre de la moneda en el idioma local 
+                    example: "Soles"   
+              Channel:
+                type: object
+                description: Objeto que contiene la información del canal
+                properties:
+                  ChannelReference:
+                    type: integer
+                    description: Código del canal de operación Ventanilla ó Aplicativo
+                    example: 101   
+                  ChannelDescription:
+                    type: string
+                    description: Descripción del canal de operación
+                    example: Operación de transferencia       
+          IdentificationOrContactInformation:
+            type: object
+            description: Objeto que almacena la modalidad de la consulta
+            properties:
+              Identification:
+                type: integer
+                description: Código de consulta (CCI / INTERO.)
+                example: 501
+              Name:
+                type: string
+                description: Nombre de la modalidad destino                                            
+                example: CCI
+          FinancialInstitution:
+            type: object
+            description: Objeto que identifica la entidad financiera
+            properties:
+              Identification:
+                type: string
+                description: Código de la entidad destino
+                example: 501
+              Name:
+                type: string 
+                description: Descripción de la entidad destino                 
+          Commissions:
+            type: object
+            description: Objeto que contiene la información relacionada a comisiones
+            properties:
+              InterplazaTransactionIndicator:
+                type: boolean
+                description: Aplica Inter-Plaza/Plaza
+                example: false
+              VariableRateIndicator:
+                type: boolean
+                description: Indicador para determinar si aplica ComisionFija / Variable
+                example: false
+              MonthlyFreeOperationCount:
+                type: integer
+                description: Cantidad de operación gratis por mes
+                example: 1
+              ActiveCommissionIndicator:
+                type: boolean
+                description: Vigencia de la configuración
+                example: false
+              Amount:
+                type: object
+                description: Objeto que contiene los montos de las comisiones
+                properties:
+                  Value:
+                    type: number
+                    description: Monto de la comisión
+                    example: 2000.5
+              VariableAmount:
+                type: object
+                description:  Objeto que contiene montos variables  
+                properties:
+                  MinimumValue:
+                    type: number
+                    description: Monto valor máximo
+                    example: 2.55
+                  MaximumValue:
+                    type: number
+                    description: Monto valor mínimo
+                    example: 10.25
+  RESPONSE_UpdateExternalTransfersResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - UpdateExternalTransfersResponse
+    type: object
+    properties:
+      UpdateExternalTransfersResponse:
+        type: object
+        description: Objeto que contiene la información de la respuesta de la actualización las transferencias interbancarias
+        properties:
+          Code:
+            type: integer
+            description: Código de respuesta 
+            example: 100
+          Message:
+            type: string
+            description: Mensaje de la operación realizada
+            example: Transacción OK
+  RESPONSE_RetrieveExternalTransfersFeesResponse:
+    description: Objeto que contiene el cuerpo del mensaje de salida
+    required:
+      - RetrieveExternalTransfersFeesResponse
+    type: object
+    properties:
+      RetrieveExternalTransfersFeesResponse:
+        type: object
+        description: Objeto que contiene la lista de comisiones para trasnferencia de cuenta digital
+        properties:
+          Commissions:
+            type: array
+            description: Objeto que contiene la lista de comisiones
+            items:
+              type: object
+              properties:
+                Commission:
+                  type: object
+                  description: Objeto que contiene las comisiones
+                  properties:
+                    Account:
+                      type: object
+                      description: Objeto que administra la información de las cuentas
+                      properties:
+                        AccountType:
+                          type: object
+                          description: Información del tipo de cuenta
+                          properties:
+                            AccountTypeValue:
+                              type: string
+                              description: Tipo de cuenta
+                              example: Individual
+                            AccountTypeIdentifier:
+                              type: integer
+                              description: Código del tipo de Cuenta
+                              example: 1
+                    PersonIdentification:
+                      type: object
+                      properties:
+                        PersonType:
+                          type: object
+                          description: Información del tipo de persona
+                          properties:
+                            PersonTypeValue:
+                              type: string
+                              description: Tipo de persona
+                              example: Natural
+                            PersonTypeIdentifier:
+                              type: integer
+                              description: Código del tipo de persona
+                              example: 1
+                    Code:
+                      type: string
+                      description: Código de la comisión
+                      example: 1234
+                    ActiveCommissionIndicator:
+                      type: boolean
+                      description: Indicador de Vigencia de la comisión
+                      example: true
+                    MonthlyFreeOperationCount:
+                      type: integer
+                      description: Cantidad de operaciones libres por mes
+                      example: 5
+                    InterplazaTransactionIndicator:
+                      type: boolean
+                      description: Indicador para determinar si es Interplaza ó plaza
+                      example: false
+                    VariableRateIndicator:
+                      type: boolean
+                      description: Indicador para determinar si es tasa Variable ó Fijo
+                      example: false
+                    Amount:
+                      type: object
+                      properties:
+                        Value:
+                          type: number
+                          description: Monto comisión
+                          example: 7.25
+                    VariableAmount:
+                      type: object
+                      properties:
+                        MinimumValue:
+                          type: number
+                          description: Monto mínimo variable
+                          example: 1.25
+                        MaximumValue:
+                          type: number
+                          description: Monto máximo variable
+                          example: 7.25
+                    Transaction:
+                      description: Información de las comisiones
+                      type: object
+                      properties:
+                        Code:
+                          type: integer
+                          description: Código de concepto de operación
+                          example: 567
+                        AdditionalInformation:
+                          type: integer
+                          description: Descripción del concepto de la operación
+                          example: Operación de transferencia
+                        Channel:
+                          description: Objeto que contiene información sobre el canal
+                          type: object
+                          properties:
+                            ChannelReference:
+                              type: integer
+                              description: Código de canal de operación
+                              example: 567
+                            ChannelDescription:
+                              type: string
+                              description: Descripción del canal de operación
+                              example: App
+                    Product:
+                      description: Objeto que contiene la información de los productos
+                      type: object
+                      properties:
+                        Productidentification:
+                          type: object
+                          description: Objeto que contiene la información de la identificación del producto
+                          properties:
+                            Identifier:
+                              type: integer
+                              description: Código del producto de la operación
+                              example: 101
+                        Channel:
+                          type: object
+                          description: Objeto que contiene la información del canal
+                          properties:
+                            ChannelReference:
+                              type: integer
+                              description: Código del canal de apertura Ventanilla ó Aplicativo
+                              example: 101   
+                            ChannelDescription:
+                              type: string
+                              description: Descripción del canal de apertura
+                              example: Ventanilla
+                    IdentificationOrContactInformation:
+                      type: object
+                      description: Objeto que almacena la modalidad de la consulta
+                      properties:
+                        Identification:
+                          type: integer
+                          description: Código de consulta (CCI / INTERO.)
+                          example: 501
+                        Name:
+                          type: string
+                          description: Nombre de la modalidad destino                                            
+                          example: CCI
+                    CreditorAgent:
+                      type: object
+                      description: Objeto que identifica al creditor  
+                      properties:
+                        FinancialInstitutionIdentification:
+                          type: object
+                          description: Objeto que identifica la entidad financiera del creditor
+                          properties:
+                            Identification:
+                              type: string
+                              description: Código de la entidad DESTINO
+                              example: 501
+                            Name:
+                              type: string
+                              description: Descripción de la entidad destino
+                              example: 501
+                    CurrencyDetails:
+                      type: object
+                      description: Objeto que contiene la información de la moneda
+                      properties:
+                        CurrencyInternalIdentifier:
+                          type: integer
+                          description: Identificador interno de la caja
+                          example: 1
+                        CurrencyCodeIdentifier:
+                          type: integer
+                          description: Identificador de la moneda según ISO 4217
+                          example: 604
+                        CurrencyCode:
+                          type: string
+                          description: Código de la moneda según ISO 4217
+                          example: "PEN"
+                        CurrencyName:
+                          type: string
+                          description: Nombre de la moneda en el idioma local 
+                          example: "Soles"       
+  REQUEST_RetrieveContactSweep:
+    type: object
+    properties:
+      RetrieveContactSweep:
+        type: object
+        properties:
+          DebtorAgent:
+            type: object
+            properties:
+              FinancialInstitution:
+                type: object
+                properties:
+                  Identification:
+                    type: string
+                    description: Código de la Entidad Originante
+                    example: "0881"
+          MessageIdentification:
+            type: object            
+            properties:
+              CCEHash:
+                example: "09876543-21ab-43de-85cd-9876543210ab"
+                description: Identificador de la traza
+                type: string 
+          Contact:
+            type: object
+            properties:
+              CustomerPhoneNumber:
+                type: string
+                description: Número de teléfono del Cliente (Valor Dummy) 
+                example: "+51999999999"
+          ContactList:
+            type: array
+            description: Directorio de contactos del cliente
+            items:
+              type: string
+            example:
+              - "+519521454477"
+              - "+519876543210"
+              - "+519998887770"
+  RESPONSE_RetrieveContactSweepResponse:
+    type: object
+    properties:
+      RetrieveContactSweepResponse:
+        type: array
+        items:
+          type: object
+          properties:
+            ContactList:
+              type: array
+              items:
+                type: object
+                properties:
+                  Contact:
+                    type: object
+                    properties:
+                      PhoneNumber:
+                        type: string
+                        description: Número de celular
+                        example: "+519521454477"
+                  BankingServiceDetails:
+                    type: array
+                    description: Lista de directorios y códigos de entidad
+                    items:
+                      type: object
+                      properties:
+                        DirectoryCode:
+                              type: string
+                              description: Código de directorio
+                              example: 0901
+                        CreditorAgent:
+                          type: object
+                          properties:
+                            FinancialInstitution:
+                              type: object
+                              properties:
+                                Identification:
+                                  type: string
+                                  description: Código de la Entidad Originante
+                                  example: "0555"   
+  
