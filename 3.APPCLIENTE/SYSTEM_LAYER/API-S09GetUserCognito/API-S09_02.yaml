@@ -1,71 +1,115 @@
 swagger: "2.0"
 info:
-  title: party-reference-data-directory-s
+  title: party-authentication-s
   version: 1.0.0
-  description: Esta API permite obtener datos de la cuenta del cliente y detalles del dispositivo.
-basePath: /party-reference-data-directory-s/v1
+  description: Esta API permite obtener cuenta de usuario de AWS cognito.
+basePath: /party-authentication-s/v1   
 paths:
-  /customer-and-device-contact/retrieve:
+  /customer-verification/retrieve:
     get:
       tags:
-        - BQ - CustomerAndDeviceInfo
-      operationId: getCustomerAndDeviceInfo
-      description: Obtener datos de la cuenta del cliente y detalles del dispositivo.
-      summary: Obtener datos de la cuenta del cliente y detalles del dispositivo.
+        - BQ - CustomerVerification
+      operationId: getCustomerVerification
+      description: Obtener cuenta de usuario de AWS cognito.
+      summary: Obtener cuenta de usuario de AWS cognito.
       produces:
         - application/json
       parameters:
-        - name: accountIdentification
+        - name: cognitoAuthIdentifier
           in: query
-          description: Número de cuenta del cliente.
+          description: Identificador del proveedor de autenticación.
           required: true
-          type: integer
+          type: string
       responses:
-        "200":
+        '200':
           description: OK
           schema:
-            $ref: "#/definitions/RESPONSE_RetrieveCustomerAndDeviceInfoResponse"
-        "204":
+            $ref: '#/definitions/RESPONSE_RetrieveCustomerVerificationResponse'
+        '204':
           description: No Content
-        "400":
+        '400':
           description: Bad Request
           schema:
-            $ref: "#/definitions/errorResponse"
-        "401":
+            $ref: '#/definitions/errorResponse'
+        '401':
           description: Unauthorized
           schema:
-            $ref: "#/definitions/errorResponse"
-        "404":
+            $ref: '#/definitions/errorResponse'
+        '404':
           description: Not Found
           schema:
-            $ref: "#/definitions/errorResponse"
-        "422":
+            $ref: '#/definitions/errorResponse'
+        '422':
           description: Unprocessable Content
           schema:
-            $ref: "#/definitions/errorResponse"
-        "500":
+            $ref: '#/definitions/errorResponse'
+        '500':
           description: Internal Server Error
           schema:
-            $ref: "#/definitions/errorResponse"
-        "502":
+            $ref: '#/definitions/errorResponse'
+        '502':
           description: Bad Gateway
           schema:
-            $ref: "#/definitions/errorResponse"
-        "504":
+            $ref: '#/definitions/errorResponse'
+        '504':
           description: Gateway Timeout
           schema:
-            $ref: "#/definitions/errorResponse"
+            $ref: '#/definitions/errorResponse'
 definitions:
-  RESPONSE_RetrieveCustomerAndDeviceInfoResponse:
-    description: "Objeto que contiene el cuerpo del mensaje de salida."
+  RESPONSE_RetrieveCustomerVerificationResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
     required:
-      - RetrieveCustomerAndDeviceInfoResponse
+      - RetrieveCustomerVerificationResponse
     type: object
     properties:
-      RetrieveCustomerAndDeviceInfoResponse:
+      RetrieveCustomerVerificationResponse:
         description: Objeto que almacena el mensaje de solicitud.
         type: object
         properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountIdentification:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+          AuthenticationMethod:
+            description: Objeto que contiene método de autenticación.
+            type: object
+            properties:
+              CognitoAuthIdentifier:
+                description: Identificador del proveedor de autenticación.
+                type: string
+              Password:
+                description: Autenticación mediante una contraseña.
+                type: string
+          PersonIdentification:
+            description: Objeto que almacena información relacionada con la identificación del cliente.
+            type: object
+            properties:
+              CustomerIdentificationNumber:
+                description: Número único asignado por el banco para identificar al cliente.
+                type: integer
+              TypeOfIdentification:
+                description: Determina el ID del tipo de documento.
+                type: integer
+              IdentityCardNumber:
+                description: Número asignado por una autoridad nacional a una tarjeta de identidad.
+                type: string
+          PersonName:
+            description: Objeto que almacena información relacionada al cliente.
+            type: object
+            properties:
+              LastName:
+                description: Determina el apellido paterno de la persona.
+                type: string
+              MothersLastName:
+                description: Determina el apellido materno de la persona.
+                type: string
+              GivenName:
+                description: Determina el primer nombre o nombres dados de la persona.
+                type: string
           Contact:
             description: Objeto que almacena información de contacto relacionada al cliente.
             type: object
@@ -76,6 +120,23 @@ definitions:
               PhoneNumber:
                 description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
                 type: string
+          Device:
+            description: Objeto que almacena información del dispositivo del cliente.
+            type: object
+            properties:
+              ApplicationVersion:
+                description: Este campo almacena la versión de la aplicación que está siendo utilizada en el dispositivo.
+                type: string
+              DeviceIdentification:
+                description: Objeto que almacena identificadores únicos del dispositivo.
+                type: object
+                properties:
+                  IMEI:
+                    description: El IMEI del dispositivo, que es un identificador único de 15 dígitos para dispositivos móviles.
+                    type: string
+                  MAC:
+                    description: La dirección MAC del dispositivo, que es un identificador único para la interfaz de red.
+                    type: string
 
   errorResponse:
     type: object
