@@ -71,14 +71,6 @@ definitions:
         description: Objeto que almacena el mensaje de solicitud.
         type: object
         properties:
-          Account:
-            description: Objeto que administra la información de las cuentas.
-            type: object
-            properties:
-              AccountIdentification:
-                description: Número de cuenta del cliente.
-                type: integer
-                example: 901234567890
           AuthenticationMethod:
             description: Objeto que contiene metodo de autenticación.   
             type: object
@@ -86,6 +78,10 @@ definitions:
               CognitoAuthIdentifier:
                 description: Identificador del proveedor de autenticación.
                 type: string
+              Password:
+                description: Autenticación mediante una contraseña.
+                type: string
+                example: "password123"
           PersonIdentification:
             description: Objeto que almacena información relacionada con la identificación del cliente.
             type: object
@@ -189,7 +185,7 @@ definitions:
             properties:
               MailingIndicator:
                 description: Indica si el correo debe enviarse a una dirección.
-                type: integer
+                type: boolean
           Agreements:
             description: Objeto que almacena un acuerdo común, formal o informal, entre dos o más partes.
             type: array

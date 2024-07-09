@@ -1,0 +1,737 @@
+swagger: "2.0"
+info:
+  title: /party-reference-data-directory-s
+  version: 1.0.0
+  description: Esta API permite registrar los datos básicos del cliente, incluyendo nombre, dirección e información de contacto.
+basePath: /party-reference-data-directory-s/v1
+paths:
+  /customer-basic-data/register:
+    post:
+      tags:
+        - BQ - CustomerBasicData
+      operationId: postCustomerBasicData
+      description: Maneja la gestión de datos básicos para perfiles de clientes, incluyendo nombre, dirección e información de contacto.
+      summary: Maneja la gestión de datos básicos para perfiles de clientes, incluyendo nombre, dirección e información de contacto.
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_RegisterCustomerBasicData
+          in: body
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_RegisterCustomerBasicDataResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+  /customer-basic-data/contact/capture:
+    patch:
+      tags:
+        - BQ - CustomerBasicData
+      operationId: patchCustomerContactData
+      description: Registrar los datos de contacto del cliente proporcionados a través de la APP,  utilizados para el envío de OTP.
+      summary: Registrar los datos de contacto del cliente proporcionados a través de la APP,  utilizados para el envío de OTP.
+      produces:
+        - application/json
+      parameters:
+        - name: accountIdentification
+          in: query
+          description: Número de cuenta del cliente.
+          required: true
+          type: integer
+        - name: body
+          schema:
+            $ref: >-
+              #/definitions/REQUEST_CaptureCustomerBasicData
+          in: body
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_CaptureCustomerBasicDataResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+  /customer-and-device-info/capture:
+    patch:
+      tags:
+        - BQ - CustomerAndDeviceInfo
+      operationId: captureCustomerAndDeviceInfo
+      description: Registrar datos de la cuenta del cliente, detalles del dispositivo y acuerdos.
+      summary: Registrar datos de la cuenta del cliente, detalles del dispositivo y acuerdos.
+      produces:
+        - application/json
+      parameters:
+        - name: accountIdentification
+          in: query
+          description: Número de cuenta del cliente.
+          required: true
+          type: integer
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/REQUEST_CaptureCustomerAndDeviceInfo'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_CaptureCustomerAndDeviceInfoResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+  /customer-and-device-info/retrieve:
+    get:
+      tags:
+        - BQ - CustomerAndDeviceInfo
+      operationId: getCustomerAndDeviceInfo
+      description: Obtener datos de la cuenta del cliente y detalles del dispositivo.
+      summary: Obtener datos de la cuenta del cliente y detalles del dispositivo.
+      produces:
+        - application/json
+      parameters:
+        - name: accountIdentification
+          in: query
+          description: Número de cuenta del cliente.
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_RetrieveCustomerAndDeviceInfoResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+  /field-management/retrieve:
+    get:
+      tags:
+        - BQ - FieldManagement
+      operationId: getFieldManagement
+      description: Obtener catálogo de campos que abarca diferentes tipos de datos.
+      summary: Obtener catálogo de campos que abarca diferentes tipos de datos.
+      produces:
+        - application/json
+        
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RESPONSE_RetrieveFieldManagementResponse'
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+definitions:
+  OBJECT_CustomerBasicData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada.
+    type: object
+    properties:
+      PersonIdentification:
+        description: Objeto que almacena información relacionada al cliente.
+        type: object
+        properties:
+          CustomerIdentificationNumber:
+            description: Número único asignado por el banco para identificar al cliente.
+            type: integer
+      Person:
+        description: Objeto que almacena información adicional relacionada al cliente.
+        type: object
+        properties:
+          Gender:
+            description: Especifica el género de la persona.  
+            type: integer
+            example: 1
+          BirthDate:
+            description: Fecha en la que nace una persona.
+            type: string
+      PersonName:
+        description: Objeto que almacena información relacionada al cliente.
+        type: object
+        properties:
+          LastName:
+            description: Determina el apellido paterno de la persona.
+            type: string
+          MothersLastName:
+            description: Determina el apellido materno de la persona.
+            type: string
+          GivenName:
+            description: Determina el primer nombre o nombres dados de la persona.
+            type: string
+      Contact:
+        description: Objeto que almacena información de contacto relacionada al cliente.
+        type: object
+        properties:
+          EmailAddress:
+            description: Dirección de correo electrónico.
+            type: string
+          PhoneNumber:
+            description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
+            type: string
+  REQUEST_RegisterCustomerBasicData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    type: object
+    properties:
+      RegisterCustomerBasicData:
+        $ref: >-
+              #/definitions/OBJECT_CustomerBasicData
+  RESPONSE_RegisterCustomerBasicDataResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - RegisterCustomerBasicDataResponse
+    type: object
+    properties:
+      RegisterCustomerBasicDataResponse:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountIdentification:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+  OBJECT_CustomerContactData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada.
+    type: object
+    properties:
+      Contact:
+        description: Objeto que almacena información de contacto relacionada al cliente.
+        type: object
+        properties:
+          EmailAddress:
+            description: Dirección de correo electrónico.
+            type: string
+          PhoneNumber:
+            description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
+            type: string
+  REQUEST_CaptureCustomerBasicData:
+    description: Objeto que contiene el cuerpo del mensaje de entrada
+    type: object
+    properties:
+      CaptureCustomerBasicData:
+        $ref: >-
+              #/definitions/OBJECT_CustomerContactData
+  RESPONSE_CaptureCustomerBasicDataResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - CaptureCustomerBasicDataResponse
+    type: object
+    properties:
+      CaptureCustomerBasicDataResponse:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountIdentification:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+  REQUEST_CaptureCustomerAndDeviceInfo:
+    description: 'Objeto que contiene el cuerpo del mensaje de solicitud.'
+    required:
+      - CaptureCustomerAndDeviceInfo
+    type: object
+    properties:
+      CaptureCustomerAndDeviceInfo:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountIdentification:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+          AuthenticationMethod:
+            description: Objeto que contiene metodo de autenticación.   
+            type: object
+            properties:
+              CognitoAuthIdentifier:
+                description: Identificador del proveedor de autenticación.
+                type: string
+          PersonIdentification:
+            description: Objeto que almacena información relacionada con la identificación del cliente.
+            type: object
+            properties:
+              CustomerIdentificationNumber:
+                description: Número único asignado por el banco para identificar al cliente.
+                type: integer
+              TypeOfIdentification:
+                description: Determina el ID del tipo de documento.
+                type: integer
+              IdentityCardNumber:
+                description: Número asignado por una autoridad nacional a una tarjeta de identidad.
+                type: string
+          PersonName:
+            description: Objeto que almacena información relacionada al cliente.
+            type: object
+            properties:
+              LastName:
+                description: Determina el apellido paterno de la persona.
+                type: string
+              MothersLastName:
+                description: Determina el apellido materno de la persona.
+                type: string
+              GivenName:
+                description: Determina el primer nombre o nombres dados de la persona.
+                type: string
+          Contact:
+            description: Objeto que almacena información de contacto relacionada al cliente.
+            type: object
+            properties:
+              EmailAddress:
+                description: Dirección de correo electrónico.
+                type: string
+              PhoneNumber:
+                description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
+                type: string
+          Device:
+            description: Objeto que almacena información del dispositivo del cliente.
+            type: object
+            properties:
+              DeviceModel:
+                description: Este campo almacena el modelo del dispositivo.
+                type: string
+              ApplicationVersion:
+                description: Este campo almacena la versión de la aplicación que está siendo utilizada en el dispositivo.
+                type: string
+              DeviceOperatingSystem:
+                description: El sistema operativo instalado en el dispositivo.
+                type: string
+              DeviceVersion:
+                description: Versión de sistema operativo.
+                type: string
+              CountryCode:
+                description: Código para identificar un país, basado en los nombres de los países obtenidos de las Naciones Unidas.
+                type: string
+              LatitudeAddress:
+                description: La latitud de la ubicación del dispositivo.
+                type: string
+              LongitudeAddress:
+                description: La longitud de la ubicación del dispositivo.
+                type: string
+              DeviceAddress:
+                description: La dirección asociada con el dispositivo, como la dirección de Protocolo de Internet (IP) o la dirección de correo electrónico.
+                type: string
+              PackageIdentification:
+                description: Identificación de los paquetes de software a los que pertenece el fragmento.
+                type: string
+              DeviceIdentification:
+                description: Objeto que almacena identificadores únicos del dispositivo.
+                type: object
+                properties:
+                  IMEI:
+                    description: El IMEI del dispositivo, que es un identificador único de 15 dígitos para dispositivos móviles.
+                    type: string
+                  MAC:
+                    description: La dirección MAC del dispositivo, que es un identificador único para la interfaz de red.
+                    type: string
+          MessageIdentification:
+            description: Identifica un mensaje mediante un identificador único y la fecha y hora en que el remitente creó el mensaje.
+            type: object
+            properties:
+              CustomerValidationRetrieve:
+                description: Traza de la petición validar cliente CLA 
+                type: string
+                example: "5JHJKS61GEfdgeg446DFG"
+              KeynuaHashEvaluate:
+                description: Token ID de resultado satisfactorio Plugin Keynua.
+                type: string
+              AuthenticationDeviceRegister:
+                description: Traza de la petición de OTP.
+                type: string
+              AuthenticationDeviceUpdate:
+                description: Traza de la validacion de OTP.
+                type: string
+              CustomerAccountRegister:
+                description: Traza de la peticion de registro de cliente.
+                type: string
+          MailingInstructions:
+            description: Objeto que almacena caracteristicas de una direccion.
+            type: object
+            properties:
+              MailingIndicator:
+                description: Indica si el correo debe enviarse a una dirección.
+                type: integer
+          Agreements:
+            description: Objeto que almacena un acuerdo común, formal o informal, entre dos o más partes.
+            type: array
+            items:
+              type: object
+              properties:
+                AgreementIdentification:
+                  description: El identificador del acuerdo, como el Número de Acuerdo, Número de Contrato, Número de Registro de Contrato, etc.
+                  type: integer
+                AgreementStatus:
+                  description: Una característica del acuerdo que se refiere al Estado del Ciclo de Vida del acuerdo.
+                  type: string
+  RESPONSE_CaptureCustomerAndDeviceInfoResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - CaptureCustomerAndDeviceInfoResponse
+    type: object
+    properties:
+      CaptureCustomerAndDeviceInfoResponse:
+        description: Objeto que almacena el mensaje de respuesta.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountIdentification:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+  RESPONSE_RetrieveCustomerAndDeviceInfoResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - RetrieveCustomerAndDeviceInfoResponse
+    type: object
+    properties:
+      RetrieveCustomerAndDeviceInfoResponse:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              Accountidentification:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+          AuthenticationMethod:
+            description: Objeto que contiene metodo de autenticación.
+            type: object
+            properties:
+              CognitoAuthIdentifier:
+                description: Identificador del proveedor de autenticación.
+                type: string
+          PersonIdentification:
+            description: Objeto que almacena información relacionada al cliente.
+            type: object
+            properties:
+              CustomerIdentificationNumber:
+                description: Número único asignado por el banco para identificar al cliente.
+                type: integer
+              TypeOfIdentification:
+                description: Determina el ID del tipo de documento.  
+                type: integer
+              IdentityCardNumber:
+                description: Número único asignado por el banco para identificar al cliente.
+                type: string
+          PersonName:
+            description: Objeto que almacena información relacionada al cliente.
+            type: object
+            properties:
+              LastName:
+                description: Determina el apellido paterno de la persona.
+                type: string
+              MothersLastName:
+                description: Determina el apellido materno de la persona.
+                type: string
+              GivenName:
+                description: Determina el primer nombre o nombres dados de la persona.
+                type: string
+          Contact:
+            description: Objeto que almacena información de contacto relacionada al cliente.
+            type: object
+            properties:
+              EmailAddress:
+                description: Dirección de correo electrónico.
+                type: string
+              PhoneNumber:
+                description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
+                type: string
+          Device:
+            description: Objeto que almacena información del dispositivo del cliente.
+            type: object
+            properties:
+              DeviceModel:
+                description: Este campo almacena el modelo del dispositivo.
+                type: string
+              ApplicationVersion:
+                description: Este campo almacena la versión de la aplicación que está siendo utilizada en el dispositivo.
+                type: string
+              DeviceIdentification:
+                description: Objeto que almacena identificadores únicos del dispositivo.
+                type: object
+                properties:
+                  IMEI:
+                    description: El IMEI del dispositivo, que es un identificador único de 15 dígitos para dispositivos móviles.
+                    type: string
+                  MAC:
+                    description: La dirección MAC del dispositivo, que es un identificador único para la interfaz de red.
+                    type: string
+  RESPONSE_RetrieveFieldManagementResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - RetrieveFieldManagementResponse
+    type: object
+    properties:
+      RetrieveFieldManagementResponse:
+        description: Objeto que almacena el mensaje de respuesta.
+        type: object
+        properties:
+          PersonIdentification:
+            description: Objeto que almacena información relacionada con la identificación del cliente.
+            type: array
+            items:
+              type: object
+              properties:
+                TypeOfIdentification:
+                  description: Determina el ID del tipo de documento.
+                  type: integer
+                  example: 1
+                IdentificationShortName:
+                  description: Nombre corto del tipo de identificación, como "DNI".
+                  type: string
+                  example: "DNI"
+                IdentificationType:
+                  description: El tipo de identificación, como "Documento Nacional de Identidad".
+                  type: string
+                  example: "Documento Nacional de Identidad"
+                ValidationRules:
+                  description: Reglas de validación para el documento de identificación.
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      Pattern:
+                        description: Patrón de validación del documento, por ejemplo, una expresión regular.
+                        type: string
+                        example: "^[0-9]{8}$"
+                      Description:
+                        description: Descripción de las reglas de validación.
+                        type: string
+                        example: "El DNI debe tener 8 dígitos numéricos."
+          Agreements:
+            description: Objeto que almacena un acuerdo común, formal o informal, entre dos o más partes.
+            type: array
+            items:
+              type: object
+              properties:
+                AgreementIdentification:
+                  description: El identificador del acuerdo, como el Número de Acuerdo, Número de Contrato, Número de Registro de Contrato, etc.
+                  type: integer
+                  example: 1
+                AgreementSubjectMatter:
+                  description: El asunto del acuerdo, como "Términos y condiciones".
+                  type: string
+                  example: "Términos y condiciones"
+                AgreementDescription:
+                  description: Una descripción del acuerdo, como un texto plano de términos y condiciones.
+                  type: string
+                  example: "Texto plano de términos y condiciones ..."
+                AgreementURLAddress:
+                  description: La URL donde se puede encontrar el acuerdo.
+                  type: string
+                  example: "https://ejemplo.com/terminos"
+          ContactPoints:
+            description: Objeto que almacena información de contacto relacionada al cliente.
+            type: array
+            items:
+              type: object
+              properties:
+                ContactIdentification:
+                  description: Identificador único para el contacto.
+                  type: integer
+                  example: 1
+                ContactType:
+                  description: Tipo de contacto, como "WhatsApp", "Teléfono", "Email", etc.
+                  type: string
+                  example: "WhatsApp"
+                ContactValue:
+                  description: Valor del contacto, como el número de teléfono o dirección de correo electrónico.
+                  type: string
+                  example: "+511234567890"
+          Branches:
+            description: Objeto que almacena información sobre la ubicación de las sucursales.
+            type: array
+            items:
+              type: object
+              properties:
+                BranchIdentification:
+                  description: Identificador único de la sucursal.
+                  type: integer
+                  example: 1
+                BranchName:
+                  description: Nombre de la sucursal.
+                  type: string
+                  example: "Oficina Central"
+                BranchAddress:
+                  description: Dirección de la sucursal.
+                  type: string
+                  example: "Av. Siempre Viva 123, Surquillo"
+                LatitudeAddress:
+                  description: Latitud de la ubicación de la sucursal.
+                  type: string
+                  example: -12.113869
+                LongitudeAddress:
+                  description: Longitud de la ubicación de la sucursal.
+                  type: string
+                  example: -77.019205
+  errorResponse:
+    type: object
+    properties:
+      error:
+        type: array
+        items:
+          type: object
+          properties:
+            status_code:
+              type: string
+              description: Código de error
+            message:
+              type: string
+              description: Mensaje de error
+

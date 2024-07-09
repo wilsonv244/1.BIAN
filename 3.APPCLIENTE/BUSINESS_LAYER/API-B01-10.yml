@@ -1,0 +1,535 @@
+swagger: '2.0'
+info:
+  title: customer-management-onboarding-b    
+  version: 1.0.0
+  description: Esta API permite validar por número de Documento de Identidad si el cliente está registrado en el corebank.
+basePath: /customer-management-onboarding-b/v1
+paths:
+  /customer-validation/retrieve:
+    get:
+      tags:
+      - BQ - CustomerValidation
+      operationId: CustomerValidation/Retrieve
+      description: Valida si el cliente está registrado en el corebank según el número de Documento
+      summary: Valida si el cliente está registrado en el corebank según el número de Documento
+      produces:
+        - application/json
+      parameters:
+        - name: typeOfIdentification
+          in: query
+          description: Determina el ID del tipo de documento.    
+          required: true
+          type: integer
+        - name: identityCardNumber
+          in: query
+          description: Número único asignado por el banco para identificar al cliente.
+          required: true
+          type: string
+        - name: IMEI
+          in: query
+          description: El IMEI del dispositivo, que es un identificador único de 15 dígitos para dispositivos móviles.
+          required: true
+          type: string
+        - name: messageIdentificationCustomerValidationRetrieve
+          in: header
+          description: Una cadena que representa la traza de la petición de validación del cliente. 
+          required: true
+          type: string
+        - name: securityToken 
+          in: header
+          description: LLave secreta para consumir los servicios sin JWT.
+          required: true
+          type: string
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/RESPONSE_EvaluateCustomerValidationResponse'
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          schema:
+            $ref: '#/definitions/errorResponse'
+          description: Bad Request
+        '401':
+          schema:
+            $ref: '#/definitions/errorResponse'
+          description: Unauthorized
+        '404':
+          schema:
+            $ref: '#/definitions/errorResponse'
+          description: Not Found
+        '422':
+          schema:
+            $ref: '#/definitions/errorResponse'
+          description: Unprocessable Content
+        '500':
+          schema:
+            $ref: '#/definitions/errorResponse'
+          description: Internal Server Error
+        '502':
+          schema:
+            $ref: '#/definitions/errorResponse'
+          description: Bad Gateway
+        '504':
+          schema:
+            $ref: '#/definitions/errorResponse'
+          description: Gateway Timeout
+  /customer-account/register:
+    post:
+      tags:
+        - BQ - CustomerAccount
+      operationId: postCustomerAccount
+      description: Registrar información básica del cliente, dispositivo y acuerdos.
+      summary: Registrar información básica del cliente, dispositivo y acuerdos.
+      produces:
+        - application/json
+      parameters:
+        - name: securityToken
+          in: query
+          description: Llave secreta para consumir los servicios sin JWT.
+          required: true
+          type: string
+        - name: messageIdentification
+          in: query
+          description: Traza de la petición de registro de cliente.
+          required: true
+          type: string
+        - name: accountIdentification
+          in: query
+          description: Número de cuenta del cliente.
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/REQUEST_RetrieveCustomerAccount'
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '422':
+          description: Unprocessable Content
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '502':
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/errorResponse'
+        '504':
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/errorResponse'
+  /authentication-device/evaluate:
+    post:
+      summary: validacion del dispositivo del cliente
+      description: Endpoint para validar un dispositivo de autenticación para un cliente.
+      operationId: evaluateAuthenticationDevice
+      tags:
+        - Authentication Device
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: phoneNumber
+          in: query
+          required: true
+          type: integer
+          description: El número de teléfono de destino para verificar.
+        - name: securityToken
+          in: header
+          required: true
+          type: string
+          description: Token de seguridad para consumir la API.
+        - name: messageIdentificationAuthenticationDeviceUpdate
+          in: header
+          required: true
+          type: string
+          description: Trace de la petición a la API.
+        - name: accountIdentification
+          in: header
+          required: true
+          type: string
+          description: Id de la cuenta.
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/EvaluateAuthenticationDeviceRequest'
+      responses:
+        200:
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/EvaluateAuthenticationDeviceResponse'
+          examples:
+            application/json:
+              AccountIdentification: "154234"
+        400:
+          description: Solicitud incorrecta
+          schema:
+            $ref: '#/definitions/errorResponse'
+          examples:
+            application/json:
+              status_code: "400"
+              status: "Bad Request"
+              message: "La solicitud contiene datos incorrectos."
+        500:
+          description: Error interno del servidor
+          schema:
+            $ref: '#/definitions/errorResponse'
+          examples:
+            application/json:
+              status_code: "500"
+              status: "Internal Server Error"
+              message: "Se produjo un error inesperado en el servidor."
+  /authentication-device/initiate:
+    post:
+      summary: Iniciar validacion del dispositivo del cliente
+      description: Endpoint para iniciar un dispositivo de autenticación para un cliente.
+      operationId: initiateAuthenticationDevice
+      tags:
+        - Authentication Device
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: securityToken
+          in: header
+          required: true
+          type: string
+          description: Token de seguridad para consumir la API.
+        - name: messageIdentification
+          in: header
+          required: true
+          type: string
+          description: Trace de la petición a la API.
+        - name: accountIdentification
+          in: header
+          required: true
+          type: string
+          description: Id de la cuenta.
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/InitiateAuthenticationDevice'
+      responses:
+        200:
+          description: Respuesta exitosa
+          schema:
+            $ref: '#/definitions/InitiateAuthenticationDeviceResponse'
+          examples:
+            application/json:
+              AccountIdentification: "154234"
+        400:
+          description: Solicitud incorrecta
+          schema:
+            $ref: '#/definitions/errorResponse'
+          examples:
+            application/json:
+              status_code: "400"
+              status: "Bad Request"
+              message: "La solicitud contiene datos incorrectos."
+        500:
+          description: Error interno del servidor
+          schema:
+            $ref: '#/definitions/errorResponse'
+          examples:
+            application/json:
+              status_code: "500"
+              status: "Internal Server Error"
+              message: "Se produjo un error inesperado en el servidor."
+definitions:
+  RESPONSE_EvaluateCustomerValidationResponse:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - EvaluateCustomerValidationResponse
+    type: object
+    properties:
+      EvaluateCustomerValidationResponse:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountNumber:
+                description: Número de cuenta del cliente.
+                type: integer
+                example: 901234567890
+  REQUEST_RetrieveCustomerAccount:
+    description: 'Objeto que contiene el cuerpo del mensaje de salida.'
+    required:
+      - RegisterCustomerAccount
+    type: object
+    properties:
+      RegisterCustomerAccount:
+        description: Objeto que almacena el mensaje de solicitud.
+        type: object
+        properties:
+          Account:
+            description: Objeto que administra la información de las cuentas.
+            type: object
+            properties:
+              AccountIdentification:
+                description: Número de cuenta del cliente.
+                type: string
+                example: 901234567890
+          AuthenticationMethod:
+            description: Objeto que contiene método de autenticación.
+            type: object
+            properties:
+              CognitoAuthIdentifier:
+                description: Identificador del proveedor de autenticación.
+                type: string
+                example: "cognitoAuthIdentifier123"
+              Password:
+                description: Autenticación mediante una contraseña.
+                type: string
+                example: "password123"
+          PersonIdentification:
+            description: Objeto que almacena información relacionada con la identificación del cliente.
+            type: object
+            properties:
+              CustomerIdentificationNumber:
+                description: Número único asignado por el banco para identificar al cliente.
+                type: integer
+                example: 123456789
+              TypeOfIdentification:
+                description: Determina el ID del tipo de documento.
+                type: integer
+                example: 1
+              IdentityCardNumber:
+                description: Número asignado por una autoridad nacional a una tarjeta de identidad.
+                type: string
+                example: "ABC123456"
+          PersonName:
+            description: Objeto que almacena información relacionada al cliente.
+            type: object
+            properties:
+              LastName:
+                description: Determina el apellido paterno de la persona.
+                type: string
+                example: "Pérez"
+              MothersLastName:
+                description: Determina el apellido materno de la persona.
+                type: string
+                example: "García"
+              GivenName:
+                description: Determina el primer nombre o nombres dados de la persona.
+                type: string
+                example: "Juan"
+          Contact:
+            description: Objeto que almacena información de contacto relacionada al cliente.
+            type: object
+            properties:
+              EmailAddress:
+                description: Dirección de correo electrónico.
+                type: string
+                example: "juan.perez@example.com"
+              PhoneNumber:
+                description: Colección de información que identifica un número de teléfono, según lo definido por los servicios de telecomunicaciones.
+                type: string
+                example: "+1234567890"
+          Device:
+            description: Objeto que almacena información del dispositivo del cliente.
+            type: object
+            properties:
+              ApplicationVersion:
+                description: Este campo almacena la versión de la aplicación que está siendo utilizada en el dispositivo.
+                type: string
+                example: "1.0.0"
+              DeviceOperatingSystem:
+                description: El sistema operativo instalado en el dispositivo.
+                type: string
+                example: "Android"
+              DeviceModel:
+                description: Este campo almacena el modelo del dispositivo.
+                type: string
+                example: "Samsung Galaxy S10"
+              DeviceVersion:
+                description: Versión de sistema operativo.
+                type: string
+                example: "10.0"
+              CountryCode:
+                description: Código para identificar un país, basado en los nombres de los países obtenidos de las Naciones Unidas.
+                type: string
+                example: "PE"
+              LatitudeAddress:
+                description: La latitud de la ubicación del dispositivo.
+                type: string
+                example: "-12.04318"
+              LongitudeAddress:
+                description: La longitud de la ubicación del dispositivo.
+                type: string
+                example: "-77.02824"
+              DeviceAddress:
+                description: La dirección asociada con el dispositivo, como la dirección de Protocolo de Internet (IP) o la dirección de correo electrónico.
+                type: string
+                example: "192.168.1.1"
+              PackageIdentification:
+                description: Identificación de los paquetes de software a los que pertenece el fragmento.
+                type: string
+                example: "com.example.app"
+              DeviceIdentification:
+                description: Objeto que almacena identificadores únicos del dispositivo.
+                type: object
+                properties:
+                  IMEI:
+                    description: El IMEI del dispositivo, que es un identificador único de 15 dígitos para dispositivos móviles.
+                    type: string
+                    example: "123456789012345"
+                  MAC:
+                    description: La dirección MAC del dispositivo, que es un identificador único para la interfaz de red.
+                    type: string
+                    example: "00:1B:44:11:3A:B7"
+          MailingInstructions:
+            description: Objeto que almacena características de una dirección.
+            type: object
+            properties:
+              MailingIndicator:
+                description: Indica si el correo debe enviarse a una dirección.
+                type: string
+                example: "Yes"
+          MessageIdentification:
+            description: Identifica un mensaje mediante un identificador único y la fecha y hora en que el remitente creó el mensaje.
+            type: object
+            properties:
+              CustomerValidationRetrieve:
+                description: Traza de la petición validar cliente CLA 
+                type: string
+                example: "5JHJKS61GEfdgeg446DFG"
+              KeynuaHashEvaluate:
+                description: Token ID de resultado satisfactorio Plugin Keynua.
+                type: string
+                example: "Keynua123"  
+              AuthenticationDeviceRegister:
+                description: Traza de la petición de OTP.
+                type: string
+                example: "OTPRequest123"
+              AuthenticationDeviceUpdate:
+                description: Traza de la validación de OTP.
+                type: string
+                example: "OTPValidate123"
+          Agreements:
+            description: Array que almacena un acuerdo común, formal o informal, entre dos o más partes.
+            type: array
+            items:
+              type: object
+              properties:
+                AgreementIdentification:
+                  description: El identificador del acuerdo, como el Número de Acuerdo, Número de Contrato, Número de Registro de Contrato, etc.
+                  type: integer
+                  example: 1
+                AgreementStatus:
+                  description: Una característica del acuerdo que se refiere al Estado del Ciclo de Vida del acuerdo.
+                  type: string
+                  example: "Active"
+  EvaluateAuthenticationDeviceRequest:
+    type: object
+    required:
+      - MessageIdentification
+      - AuthenticationMethod
+    properties:
+      MessageIdentification:
+        type: object
+        required:
+          - CustomerValidationRetrieve
+          - KeynuaHashEvaluate
+          - AuthenticationDeviceRegister
+        properties:
+          CustomerValidationRetrieve:
+            type: string
+            description: Identificación del documento.
+          KeynuaHashEvaluate:
+            type: string
+            description: Identificación Keynua.
+          AuthenticationDeviceRegister:
+            type: string
+            description: Registro del dispositivo de autenticación.
+      AuthenticationMethod:
+        type: object
+        required:
+          - OneTimePassword
+        properties:
+          OneTimePassword:
+            type: string
+            description: Contraseña de un solo uso.
+            example: "234234"
+  EvaluateAuthenticationDeviceResponse:
+      type: object
+      properties:
+        EvaluateAuthenticationDeviceResponse:
+          type: object
+          properties:
+            AccountIdentification:
+              type: string
+              description: Número de cuenta asociado a la solicitud.
+              example: ""
+  InitiateAuthenticationDevice:
+    type: object
+    required:
+      - MessageIdentification
+      - AuthenticationDevice
+    properties:
+      MessageIdentification:
+        type: object
+        required:
+          - CustomerValidationRetrieve
+          - KeynuaHashEvaluate
+        properties:
+          CustomerValidationRetrieve:
+            type: string
+            description: Identificación del documento.
+          KeynuaHashEvaluate:
+            type: string
+            description: Identificación Keynua.
+      AuthenticationDevice:
+        type: object
+        required:
+          - PhoneNumber
+        properties:
+          PhoneNumber:
+            type: string
+            description: Número de teléfono del dispositivo de autenticación.
+            example: "951865876"
+  InitiateAuthenticationDeviceResponse:
+    type: object
+    properties:
+      AccountIdentification:
+        type: string
+        description: Número de cuenta asociado a la solicitud.
+        example: ""
+  errorResponse:
+    type: object
+    properties:
+      status_code:
+        type: string
+        description: Código de error
+      status:
+        type: string
+        description: Estado del error
+      message:
+        type: string
+        description: Mensaje de error        
