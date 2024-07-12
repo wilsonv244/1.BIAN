@@ -114,22 +114,6 @@ definitions:
                     type: integer
                     description: numero de DNI
                     example: 476646548
-          Contact:
-                type: object
-                description: Objeto que contiene la identificacion del contacto
-                properties:
-                  Name:
-                    type: string
-                    description: nombre 
-                    example: jorgito
-                  EmailAddress:
-                    type: string
-                    description: email
-                    example: test@gmail.com
-                  PhoneNumber:
-                    type: integer
-                    description: numero de celular
-                    example: 9521454475
           AuthenticationMethod:
                 type: object
                 description: Objeto que contiene metodo de autenticacion
@@ -138,26 +122,6 @@ definitions:
                     type: string
                     description: tipo de dato contrasena
                     example: test@123s-
-          DeviceIdentification:
-                type: object
-                description: Objeto que contiene la información del dispositivo
-                properties:
-                  IMEI:
-                    type: integer
-                    description: La identidad internacional de equipo móvil único para identificar un teléfono móvil.
-                    example: 123123423532342
-                  MAC:
-                    type: string
-                    description: Dirección MAC del dispositivo
-                    example: 00:1B:44:11:3A:B7
-          Device:
-                type: object
-                description: Objeto que contiene la información de la version de la aplicacion
-                properties:
-                  ApplicationVersion:
-                    type: string
-                    description: version de la aplicacion
-                    example: v1.9
                   
   RESPONSE_RegisterCustomerVerificationResponse:
     description: Objeto que contiene el cuerpo del mensaje de salida
