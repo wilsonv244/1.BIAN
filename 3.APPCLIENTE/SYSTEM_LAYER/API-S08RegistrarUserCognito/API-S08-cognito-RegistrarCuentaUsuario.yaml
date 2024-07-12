@@ -114,6 +114,20 @@ definitions:
                     type: integer
                     description: numero de DNI
                     example: 476646548
+          Contact:
+            type: object
+            description: Objeto que contiene la información relacionada al registrar enviar otp telefono
+            properties:
+              EmailAddress:
+                type: string
+                description: Numero de telefono
+                example: "wilsonwnidows123@gmail.com"
+
+              MobilePhoneNumber:
+                type: string
+                description: Numero de telefono
+                example: "951865876"
+
           AuthenticationMethod:
                 type: object
                 description: Objeto que contiene metodo de autenticacion
